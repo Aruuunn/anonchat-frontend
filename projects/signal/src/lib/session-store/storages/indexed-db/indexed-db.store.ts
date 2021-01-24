@@ -1,20 +1,18 @@
-import { Storage } from './storage';
+import { Storage } from '../../storage';
+import {DB_NAME, DB_VERSION, OBJECT_STORE_NAME} from './indexed-db.constants';
 
 export class IndexedDBStorage implements Storage {
-  private readonly DB_VERSION = 1;
-  private readonly DB_NAME = 'STORAGE';
-  private readonly OBJECT_STORE_NAME = 'DATA';
-  private databaseResolvingPromise: Promise<IDBDatabase>;
+
+  private readonly databaseResolvingPromise: Promise<IDBDatabase>;
+
   constructor() {
     const request: IDBOpenDBRequest = window.indexedDB.open(
-      this.DB_NAME,
-      this.DB_VERSION
+      DB_NAME,
+      DB_VERSION
     );
     request.onupgradeneeded = (e) => {
       const database: IDBDatabase = (e.target as any).result;
-      database?.createObjectStore(this.OBJECT_STORE_NAME, {
-        keyPath: 'key',
-      });
+      database?.createObjectStore(OBJECT_STORE_NAME);
     };
     this.databaseResolvingPromise = new Promise((resolve, reject) => {
       request.onsuccess = (e) => {
@@ -28,8 +26,8 @@ export class IndexedDBStorage implements Storage {
 
   private async getObjectStore(mode: IDBTransactionMode = 'readonly'): Promise<IDBObjectStore> {
     const database: IDBDatabase = await this.databaseResolvingPromise;
-    const transaction = database.transaction(this.OBJECT_STORE_NAME, mode);
-    return transaction.objectStore(this.OBJECT_STORE_NAME);
+    const transaction = database.transaction(OBJECT_STORE_NAME, mode);
+    return transaction.objectStore(OBJECT_STORE_NAME);
   }
 
   async load(key: string): Promise<IDBDatabase> {
@@ -50,7 +48,7 @@ export class IndexedDBStorage implements Storage {
   }
   async save(key: string, data: object): Promise<void> {
     const objectStore = await this.getObjectStore('readwrite');
-    objectStore.add(data,key);
+    objectStore.add(data, key);
   }
 }
 
