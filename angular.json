@@ -125,6 +125,46 @@
           }
         }
       }
+    },
+    "signal": {
+      "projectType": "library",
+      "root": "projects/signal",
+      "sourceRoot": "projects/signal/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/signal/tsconfig.lib.json",
+            "project": "projects/signal/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/signal/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/signal/src/test.ts",
+            "tsConfig": "projects/signal/tsconfig.spec.json",
+            "karmaConfig": "projects/signal/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/signal/tsconfig.lib.json",
+              "projects/signal/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "annon-chat"
