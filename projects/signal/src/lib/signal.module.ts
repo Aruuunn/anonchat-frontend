@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
-import IndexedDBStorage from './session-store/storages/indexed-db/indexed-db.store';
-import {SessionStore} from './session-store/session-store';
 
+import { SignalProtocolStore } from './signal-protocol-store/signal-protocol-store';
+import { InMemoryStorage } from './signal-protocol-store/storages/in-memory';
 @NgModule({
   declarations: [],
   imports: [],
   exports: [],
-  providers: [IndexedDBStorage, SessionStore]
+  providers: [InMemoryStorage, SignalProtocolStore],
 })
 export class SignalModule {}
