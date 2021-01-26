@@ -10,10 +10,23 @@ import {
   isArrayBuffer,
   isKeyPairType
 } from './type-gaurds.util';
+import {
+  IDENTITY_KEY,
+  REGISTRATION_ID,
+  PRE_KEY_PREFIX,
+  SESSION_PREFIX,
+  SIGNED_PRE_KEY_PREFIX, IDENTITY_PREFIX,
+} from './constants';
 import { Storage } from './storage';
 import { arrayBufferToString } from './array-buffer.utils';
 
-export class SignalProtocolStore implements StorageType {
+export interface Store extends StorageType {
+  storeLocalRegistrationId: (registrationId: number) => Promise<void>;
+  removeAllSessions: (identifier: string) => Promise<void>;
+  storeIdentityKeyPair: (identityKeyPair: KeyPairType) => Promise<void>;
+}
+
+export class SignalProtocolStore implements Store {
   constructor(private readonly store: Storage) {}
 
   async get(key: string, defaultValue: StoreValue): Promise<StoreValue> {
@@ -43,16 +56,24 @@ export class SignalProtocolStore implements StorageType {
     await this.store.save(key, value);
   }
 
+  async storeIdentityKeyPair(identityKeyPair: KeyPairType): Promise<void>{
+    await this.store.save(IDENTITY_KEY, identityKeyPair);
+  }
+
   async getIdentityKeyPair(): Promise<KeyPairType | undefined> {
-    const kp = await this.get('identityKey', undefined);
+    const kp = await this.get(IDENTITY_KEY, undefined);
     if (isKeyPairType(kp) || typeof kp === 'undefined') {
       return kp;
     }
     throw new Error('Item stored as identity key of unknown type.');
   }
 
+  async storeLocalRegistrationId(registrationId: number): Promise<void> {
+    await this.store.save(REGISTRATION_ID, registrationId);
+  }
+
   async getLocalRegistrationId(): Promise<number | undefined> {
-    const rid = await this.get('registrationId', undefined);
+    const rid = await this.get(REGISTRATION_ID, undefined);
     if (typeof rid === 'number' || typeof rid === 'undefined') {
       return rid;
     }
@@ -67,7 +88,7 @@ export class SignalProtocolStore implements StorageType {
     if (identifier === null || identifier === undefined) {
       throw new Error('tried to check identity key for undefined/null key');
     }
-    const trusted = await this.get('identityKey' + identifier, undefined);
+    const trusted = await this.get(IDENTITY_PREFIX + identifier, undefined);
 
     // TODO: Is this right? If the ID is NOT in our store we trust it?
     if (trusted === undefined) {
@@ -80,7 +101,7 @@ export class SignalProtocolStore implements StorageType {
   }
 
   async loadPreKey(keyId: string | number): Promise<KeyPairType | undefined> {
-    let res = await this.get('25519KeypreKey' + keyId, undefined);
+    let res = await this.get(PRE_KEY_PREFIX + keyId, undefined);
     if (isKeyPairType(res)) {
       res = { pubKey: res.pubKey, privKey: res.privKey };
       return res;
@@ -93,7 +114,7 @@ export class SignalProtocolStore implements StorageType {
   async loadSession(
     identifier: string
   ): Promise<SessionRecordType | undefined> {
-    const rec = await this.get('session' + identifier, undefined);
+    const rec = await this.get(SESSION_PREFIX + identifier, undefined);
     if (typeof rec === 'string') {
       return rec as string;
     } else if (typeof rec === 'undefined') {
@@ -105,7 +126,7 @@ export class SignalProtocolStore implements StorageType {
   async loadSignedPreKey(
     keyId: number | string
   ): Promise<KeyPairType | undefined> {
-    const res = await this.get('25519KeysignedKey' + keyId, undefined);
+    const res = await this.get(SIGNED_PRE_KEY_PREFIX + keyId, undefined);
     if (isKeyPairType(res)) {
       return { pubKey: res.pubKey, privKey: res.privKey };
     } else if (typeof res === 'undefined') {
@@ -115,7 +136,7 @@ export class SignalProtocolStore implements StorageType {
   }
 
   async removePreKey(keyId: number | string): Promise<void> {
-   await this.remove('25519KeypreKey' + keyId);
+   await this.remove(PRE_KEY_PREFIX + keyId);
   }
 
   async saveIdentity(
@@ -128,8 +149,8 @@ export class SignalProtocolStore implements StorageType {
 
     const address = SignalProtocolAddress.fromString(identifier);
 
-    const existing = await this.get('identityKey' + address.getName(), undefined);
-    await this.put('identityKey' + address.getName(), identityKey);
+    const existing = await this.get(IDENTITY_PREFIX + address.getName(), undefined);
+    await this.put(IDENTITY_PREFIX + address.getName(), identityKey);
     if (existing && !isArrayBuffer(existing)) {
       throw new Error('Identity Key is incorrect type');
     }
@@ -143,7 +164,7 @@ export class SignalProtocolStore implements StorageType {
     identifier: string,
     record: SessionRecordType
   ): Promise<void> {
-    return this.put('session' + identifier, record);
+    return this.put(SESSION_PREFIX + identifier, record);
   }
 
   async loadIdentityKey(identifier: string): Promise<ArrayBuffer | undefined> {
@@ -151,7 +172,7 @@ export class SignalProtocolStore implements StorageType {
       throw new Error('Tried to get identity key for undefined/null key');
     }
 
-    const key = await this.get('identityKey' + identifier, undefined);
+    const key = await this.get(IDENTITY_PREFIX + identifier, undefined);
     if (isArrayBuffer(key)) {
       return key as ArrayBuffer;
     } else if (typeof key === 'undefined') {
@@ -164,7 +185,7 @@ export class SignalProtocolStore implements StorageType {
     keyId: number | string,
     keyPair: KeyPairType
   ): Promise<void> {
-    return this.put('25519KeypreKey' + keyId, keyPair);
+    return this.put(PRE_KEY_PREFIX + keyId, keyPair);
   }
 
   // TODO: Why is this keyId a number where others are strings?
@@ -172,20 +193,20 @@ export class SignalProtocolStore implements StorageType {
     keyId: number | string,
     keyPair: KeyPairType
   ): Promise<void> {
-    return this.put('25519KeysignedKey' + keyId, keyPair);
+    return this.put(SIGNED_PRE_KEY_PREFIX + keyId, keyPair);
   }
 
   async removeSignedPreKey(keyId: number | string): Promise<void> {
-    return this.remove('25519KeysignedKey' + keyId);
+    return this.remove(SIGNED_PRE_KEY_PREFIX + keyId);
   }
 
   async removeSession(identifier: string): Promise<void> {
-    return this.remove('session' + identifier);
+    return this.remove(SESSION_PREFIX + identifier);
   }
 
   async removeAllSessions(identifier: string): Promise<void> {
     for (const key in await this.store.keys()) {
-      if (key.startsWith('session' + identifier)) {
+      if (key.startsWith(SESSION_PREFIX + identifier)) {
         await this.store.remove(key);
       }
     }
