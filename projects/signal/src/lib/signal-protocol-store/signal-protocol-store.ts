@@ -4,21 +4,19 @@ import {
   SessionRecordType,
   SignalProtocolAddress,
 } from '@privacyresearch/libsignal-protocol-typescript';
-
+import { Inject, Injectable } from '@angular/core';
+import { arrayBufferToString } from '@privacyresearch/libsignal-protocol-typescript/lib/helpers';
 import { StoreValue, KeyPairType } from './signal-protocol-store.interfaces';
-import {
-  isArrayBuffer,
-  isKeyPairType
-} from './type-gaurds.util';
+import { isArrayBuffer, isKeyPairType } from './type-gaurds.util';
 import {
   IDENTITY_KEY,
   REGISTRATION_ID,
   PRE_KEY_PREFIX,
   SESSION_PREFIX,
-  SIGNED_PRE_KEY_PREFIX, IDENTITY_PREFIX,
+  SIGNED_PRE_KEY_PREFIX,
+  IDENTITY_PREFIX,
 } from './constants';
 import { Storage } from './storage';
-import { arrayBufferToString } from './array-buffer.utils';
 
 export interface Store extends StorageType {
   storeLocalRegistrationId: (registrationId: number) => Promise<void>;
@@ -26,8 +24,12 @@ export interface Store extends StorageType {
   storeIdentityKeyPair: (identityKeyPair: KeyPairType) => Promise<void>;
 }
 
+@Injectable()
 export class SignalProtocolStore implements Store {
-  constructor(private readonly store: Storage) {}
+  constructor(
+    @Inject('STORAGE-BACKEND')
+    private store: Storage
+  ) {}
 
   async get(key: string, defaultValue: StoreValue): Promise<StoreValue> {
     if (key === null || key === undefined) {
@@ -56,7 +58,7 @@ export class SignalProtocolStore implements Store {
     await this.store.save(key, value);
   }
 
-  async storeIdentityKeyPair(identityKeyPair: KeyPairType): Promise<void>{
+  async storeIdentityKeyPair(identityKeyPair: KeyPairType): Promise<void> {
     await this.store.save(IDENTITY_KEY, identityKeyPair);
   }
 
@@ -136,7 +138,7 @@ export class SignalProtocolStore implements Store {
   }
 
   async removePreKey(keyId: number | string): Promise<void> {
-   await this.remove(PRE_KEY_PREFIX + keyId);
+    await this.remove(PRE_KEY_PREFIX + keyId);
   }
 
   async saveIdentity(
@@ -149,15 +151,20 @@ export class SignalProtocolStore implements Store {
 
     const address = SignalProtocolAddress.fromString(identifier);
 
-    const existing = await this.get(IDENTITY_PREFIX + address.getName(), undefined);
+    const existing = await this.get(
+      IDENTITY_PREFIX + address.getName(),
+      undefined
+    );
     await this.put(IDENTITY_PREFIX + address.getName(), identityKey);
     if (existing && !isArrayBuffer(existing)) {
       throw new Error('Identity Key is incorrect type');
     }
 
-    return !!(existing &&
+    return !!(
+      existing &&
       arrayBufferToString(identityKey) !==
-      arrayBufferToString(existing as ArrayBuffer));
+        arrayBufferToString(existing as ArrayBuffer)
+    );
   }
 
   async storeSession(
@@ -212,4 +219,3 @@ export class SignalProtocolStore implements Store {
     }
   }
 }
-

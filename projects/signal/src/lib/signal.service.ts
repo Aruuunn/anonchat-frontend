@@ -1,14 +1,13 @@
-import {Injectable} from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import {
   KeyHelper,
   KeyPairType,
   PreKeyPairType,
   PreKeyType,
   SignedPreKeyPairType,
-  SignedPublicPreKeyType
+  SignedPublicPreKeyType,
 } from '@privacyresearch/libsignal-protocol-typescript';
 import {Store} from './signal-protocol-store/signal-protocol-store';
-
 
 export interface Bundle {
   registrationId: number;
@@ -17,9 +16,12 @@ export interface Bundle {
   oneTimePreKeys: PreKeyType [];
 }
 
+
 @Injectable()
 export class SignalService {
-  constructor(private readonly store: Store) {
+  constructor(
+    @Inject('STORE')
+    private store: Store) {
   }
 
   generateRandomId(): number {

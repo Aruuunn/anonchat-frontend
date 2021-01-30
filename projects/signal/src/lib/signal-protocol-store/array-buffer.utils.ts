@@ -1,21 +1,33 @@
-export function arrayBufferToString(b: ArrayBuffer): string {
-  return uint8ArrayToString(new Uint8Array(b));
-}
+import {
+  binaryStringToArrayBuffer,
+  arrayBufferToString,
+} from '@privacyresearch/libsignal-protocol-typescript/lib/helpers';
 
-export function uint8ArrayToString(arr: Uint8Array): string {
-  const end = arr.length;
-  let begin = 0;
-  if (begin === end) {
-    return '';
-  }
-  let chars: number[] = [];
-  const parts: string[] = [];
-  while (begin < end) {
-    chars.push(arr[begin++]);
-    if (chars.length >= 1024) {
-      parts.push(String.fromCharCode(...chars));
-      chars = [];
+
+export function convertAllStringToArrayBuffer(
+  obj: Record<string, any>
+): Record<string, any> {
+  const objClone: Record<string, any> = Object.assign({}, obj);
+  for (const key of Object.keys(objClone)) {
+    if (objClone[key] instanceof String) {
+      objClone[key] = binaryStringToArrayBuffer(objClone[key]);
+    } else if (objClone[key] instanceof Object) {
+      objClone[key] = convertAllArrayBufferToString(objClone[key]);
     }
   }
-  return parts.join('') + String.fromCharCode(...chars);
+  return objClone;
+}
+
+export function convertAllArrayBufferToString(
+  obj: Record<string, any>
+): Record<string, any> {
+  const objClone: Record<string, any> = Object.assign({}, obj);
+  for (const key of Object.keys(objClone)) {
+    if (objClone[key] instanceof ArrayBuffer) {
+      objClone[key] = arrayBufferToString(objClone[key]);
+    } else if (objClone[key] instanceof Object) {
+      objClone[key] = convertAllArrayBufferToString(objClone[key]);
+    }
+  }
+  return objClone;
 }
