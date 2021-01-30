@@ -1,0 +1,16 @@
+<h1 class="poppins text-white text-4xl text-center">Join Now!</h1>
+<form class="flex flex-col mx-auto mt-10 text-white poppins" (ngSubmit)="submitHandler()" #f="ngForm" style="max-width: 400px">
+  <label for="full-name"  class="text-gray-300">Full Name</label>
+  <input id="full-name" name="fullname" ngModel class="mt-1 text-field" type="text" required #fullName="ngModel">
+  <p *ngIf="!fullName.valid && fullName.touched" class="text-red-400 text-sm">* Full name is required</p>
+  <label for="email" class="text-gray-300 mt-4">Email</label>
+  <input id="email" email name="email" ngModel class="mt-1 text-field" type="email" required #email="ngModel">
+  <p *ngIf="!email.valid && email.touched" class="text-red-400 text-sm">* {{email.value.trim()==="" ? "email is required": "email is invalid"}}</p>
+  <label for="password" class="mt-4 text-gray-300">Password</label>
+  <input id="password"  name="password" ngModel class="mt-1 text-field" type="password" minlength="8" required #password="ngModel">
+  <p *ngIf="!password.valid && password.touched" class="text-red-400 text-sm">* {{password.value.trim()==="" ? "password is required": "password has to have at least 8 characters"}}</p>
+  <label for="retype-password" class="mt-4 text-gray-300">Re-type Password</label>
+  <input id="retype-password" name="retyped-password"  ngModel class="mt-1 text-field" type="password" required>
+  <button class="btn-green btn mt-6" type="submit" [disabled]="!f.valid">Login</button>
+  <div class="text-gray-300  mt-10">have an account? <a href="#" class="text-green-200 focus:underline hover:underline">signin</a></div>
+</form>

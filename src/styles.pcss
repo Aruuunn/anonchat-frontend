@@ -7,10 +7,18 @@
 }
 
 .text-field {
-  background-color:  #484B51;
-  @apply p-3 focus:ring-2 focus:ring-green-300 text-white rounded-xl;
+  background-color: #484B51;
+  @apply p-3 focus:ring-2 focus:ring-green-300 text-white rounded-lg;
 }
 
 .btn {
-  @apply poppins w-full p-3 rounded-xl border-none;
+  @apply poppins w-full p-3 rounded-lg border-none;
+}
+
+.text-field.ng-touched.ng-invalid {
+  @apply border border-red-400 focus:ring-red-400;
+}
+
+.text-field.ng-touched.ng-invalid:focus {
+  @apply border border-transparent;
 }
