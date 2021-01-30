@@ -5,21 +5,17 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {SignalModule} from '../../projects/signal/src/lib/signal.module';
 import {SignalService} from '../../projects/signal/src/lib/signal.service';
-import {AuthComponent} from './auth/auth.component';
-import {LoginComponent} from './auth/login/login.component';
-import {SignupComponent} from './auth/signup/signup.component';
+import {AuthModule} from './auth/auth.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AuthComponent,
-    LoginComponent,
-    SignupComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     SignalModule,
+    AuthModule
   ],
   providers: [SignalService],
   bootstrap: [AppComponent]
