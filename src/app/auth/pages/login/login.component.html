@@ -1,9 +1,11 @@
 <h1 class="poppins text-white text-4xl text-center">Welcome Back!</h1>
-<form class="flex flex-col mx-auto mt-10 text-white" style="max-width: 400px">
+<form class="flex flex-col mx-auto mt-10 text-white poppins" #f="ngForm" style="max-width: 400px">
   <label for="email" class="text-gray-300">Email</label>
-  <input id="email" class="mt-1 text-field" type="email" required>
+  <input id="email" name="email" email class="mt-1 text-field" ngModel type="email" #email="ngModel" required>
+  <p *ngIf="!email.valid && email.touched" class="text-red-400 text-sm">* {{email.value.trim()==="" ? "email is required": "email is invalid"}}</p>
   <label for="password" class="mt-4 text-gray-300">Password</label>
-  <input id="password" class="mt-1 text-field" type="password" required>
-  <button class="btn-green btn mt-6">Login</button>
-  <div class="text-gray-300 poppins mt-10">Don't have an account? <a href="#" class="text-green-200 focus:underline hover:underline">signup</a></div>
+  <input id="password" name="password" class="mt-1 text-field" ngModel #password="ngModel" type="password" required>
+  <p *ngIf="!password.valid && password.touched" class="text-red-400 text-sm">* Password is required</p>
+  <button class="btn-green btn mt-6" [disabled]="!f.valid">Login</button>
+  <div class="text-gray-300 poppins mt-10">Don't have an account? <a routerLink="/auth/signup" class="text-green-200 focus:underline hover:underline">signup</a></div>
 </form>

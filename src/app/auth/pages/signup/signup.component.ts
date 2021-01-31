@@ -1,10 +1,10 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {NgForm} from '@angular/forms';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
-  styleUrls: ['../../../../styles/palette.sass', '../../../../styles/common.sass']
+  styleUrls: ['../../../../styles/palette.scss', '../../../../styles/common.scss']
 })
 export class SignupComponent implements OnInit {
 

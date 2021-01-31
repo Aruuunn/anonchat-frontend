@@ -41,9 +41,7 @@ yarn-error.log
 testem.log
 /typings
 
+generated/*
 # System Files
 .DS_Store
 Thumbs.db
-LIB_README.md
-*.css
-*.css.map

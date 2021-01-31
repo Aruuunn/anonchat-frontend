@@ -15,7 +15,7 @@ import {AuthModule} from './auth/auth.module';
     BrowserModule,
     AppRoutingModule,
     SignalModule,
-    AuthModule
+    AuthModule,
   ],
   providers: [SignalService],
   bootstrap: [AppComponent]

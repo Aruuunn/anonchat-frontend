@@ -10,7 +10,8 @@
   <input id="password"  name="password" ngModel class="mt-1 text-field" type="password" minlength="8" required #password="ngModel">
   <p *ngIf="!password.valid && password.touched" class="text-red-400 text-sm">* {{password.value.trim()==="" ? "password is required": "password has to have at least 8 characters"}}</p>
   <label for="retype-password" class="mt-4 text-gray-300">Re-type Password</label>
-  <input id="retype-password" name="retyped-password"  ngModel class="mt-1 text-field" type="password" required>
+  <input id="retype-password" appCheckRetypedPassword="password" name="retyped-password"  ngModel class="mt-1 text-field" type="password" #retypedPassword="ngModel" required>
+  <p *ngIf="!retypedPassword.valid && retypedPassword.touched" class="text-red-400 text-sm">* Password doesn't match</p>
   <button class="btn-green btn mt-6" type="submit" [disabled]="!f.valid">Login</button>
-  <div class="text-gray-300  mt-10">have an account? <a href="#" class="text-green-200 focus:underline hover:underline">signin</a></div>
+  <div class="text-gray-300  mt-10">have an account? <a routerLink="/auth/login" class="text-green-200 focus:underline hover:underline">login</a></div>
 </form>

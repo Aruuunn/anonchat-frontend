@@ -5,18 +5,21 @@ import {LoginComponent} from './pages/login/login.component';
 import {SignupComponent} from './pages/signup/signup.component';
 import {FormsModule} from '@angular/forms';
 import {SharedModule} from '../shared/shared.module';
-
+import {IsRetypedPasswordEqualDirective} from './directives/is-retyped-password-equal.directive';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
   declarations: [
     AuthComponent,
     LoginComponent,
-    SignupComponent
+    SignupComponent,
+    IsRetypedPasswordEqualDirective,
   ],
   imports: [
     CommonModule,
     FormsModule,
-    SharedModule
+    SharedModule,
+    RouterModule,
   ],
   exports: [AuthComponent, LoginComponent, SignupComponent]
 })

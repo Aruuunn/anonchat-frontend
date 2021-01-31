@@ -5,7 +5,7 @@ import {convertAllArrayBufferToString} from '../../projects/signal/src/lib/signa
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['../styles/palette.sass']
+  styleUrls: ['../styles/palette.scss']
 })
 export class AppComponent implements OnInit {
   constructor(private signalService: SignalService) {
