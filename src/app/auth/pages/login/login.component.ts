@@ -2,6 +2,7 @@ import {Component, EventEmitter, OnInit, Output,} from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {isNotNullOrUndefined} from 'codelyzer/util/isNotNullOrUndefined';
 import {AuthService} from '../../auth.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ export class LoginComponent implements OnInit {
   public isLoading = false;
   public error: null | string = null;
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private router: Router) {
   }
 
   loginHandler(form: NgForm): void {
@@ -28,15 +29,16 @@ export class LoginComponent implements OnInit {
       this.isLoading = false;
       form.controls?.password?.reset();
       sub.unsubscribe();
+      void this.router.navigateByUrl('/');
     }, err => {
       form.controls.password.reset();
       this.isLoading = false;
-      if (err.status === 400) {
-        this.error = 'Email/Password is wrong';
+      if (err?.error?.message) {
+        this.error = err.error.message;
       } else {
         this.error = 'Something went wrong';
       }
-      console.log(err);
+      sub.unsubscribe();
     });
   }
 
