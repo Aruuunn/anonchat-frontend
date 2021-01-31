@@ -6,6 +6,7 @@ import {AppComponent} from './app.component';
 import {SignalModule} from '../../projects/signal/src/lib/signal.module';
 import {SignalService} from '../../projects/signal/src/lib/signal.service';
 import {AuthModule} from './auth/auth.module';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import {AuthModule} from './auth/auth.module';
     AppRoutingModule,
     SignalModule,
     AuthModule,
+    HttpClientModule
   ],
   providers: [SignalService],
   bootstrap: [AppComponent]

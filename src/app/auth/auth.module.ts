@@ -7,6 +7,7 @@ import {FormsModule} from '@angular/forms';
 import {SharedModule} from '../shared/shared.module';
 import {IsRetypedPasswordEqualDirective} from './directives/is-retyped-password-equal.directive';
 import {RouterModule} from '@angular/router';
+import {AuthService} from './auth.service';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import {RouterModule} from '@angular/router';
     SharedModule,
     RouterModule,
   ],
+  providers: [AuthService],
   exports: [AuthComponent, LoginComponent, SignupComponent]
 })
 export class AuthModule {
