@@ -1,0 +1,24 @@
+<h1 class="poppins text-white text-4xl text-center">Join Now!</h1>
+<form class="flex flex-col mx-auto mt-10 text-white poppins" (ngSubmit)="submitHandler(f)" #f="ngForm" style="max-width: 400px">
+  <p *ngIf="error!==null" id="error-message" aria-errormessage="error-message" class="border text-red-400 border-red-400 p-4 mb-4 rounded mt-2 flex">
+    <svg xmlns="http://www.w3.org/2000/svg" height="24px" class="mr-2" width="24px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+    </svg>
+    {{error}}
+  </p>
+  <label for="full-name"  class="text-gray-300">Full Name</label>
+  <input id="full-name" name="fullname" ngModel class="mt-1 text-field" type="text" required #fullName="ngModel">
+  <p *ngIf="!fullName.valid && fullName.touched" class="text-red-400 text-sm">* Full name is required</p>
+  <label for="email" class="text-gray-300 mt-4">Email</label>
+  <input id="email" email name="email" ngModel class="mt-1 text-field" type="email" required #email="ngModel">
+  <p *ngIf="!email.valid && email.touched" class="text-red-400 text-sm">* {{email.value.trim()==="" ? "email is required": "email is invalid"}}</p>
+  <label for="password" class="mt-4 text-gray-300">Password</label>
+  <input id="password"  name="password" ngModel class="mt-1 text-field" type="password" minlength="8" required #password="ngModel">
+  <p *ngIf="!password.valid && password.touched" class="text-red-400 text-sm">* {{password.value.trim()==="" ? "password is required": "password has to have at least 8 characters"}}</p>
+  <label for="retype-password" class="mt-4 text-gray-300">Re-type Password</label>
+  <input id="retype-password" appCheckRetypedPassword="password" name="retyped-password"  ngModel class="mt-1 text-field" type="password" #retypedPassword="ngModel" required>
+  <p *ngIf="!retypedPassword.valid && retypedPassword.touched" class="text-red-400 text-sm">* Password doesn't match</p>
+  <button class="btn-green btn mt-6" [disabled]="!f.valid || isLoading">{{isLoading ? "loading..." : "Sign Up"}}</button>
+  <div class="text-gray-300  mt-10">have an account? <a routerLink="/auth/login" class="text-green-200 focus:underline hover:underline">login</a></div>
+</form>

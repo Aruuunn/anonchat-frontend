@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.poppins {
+  font-family: 'Poppins', sans-serif;
+}
+
+.text-field {
+  background-color: #3d3f42;
+  @apply p-3 focus:outline-none focus:ring-2 focus:ring-green-300 text-white rounded-lg;
+}
+
+.btn {
+  @apply poppins w-full p-3 rounded-lg border-none;
+}
+
+.text-field.ng-touched.ng-invalid {
+  @apply border border-red-400 focus:ring-red-400;
+}
+
+.text-field.ng-touched.ng-invalid:focus {
+  @apply border border-transparent;
+}
