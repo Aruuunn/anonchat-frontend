@@ -1,7 +1,8 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {NgForm} from '@angular/forms';
-import {AuthService} from '../../auth.service';
 import {Router} from '@angular/router';
+import {HttpService} from '../../../shared/http/http.service';
+import {UserService} from '../../../shared/user/user.service';
 
 @Component({
   selector: 'app-signup',
@@ -12,7 +13,7 @@ export class SignupComponent implements OnInit {
   public isLoading = false;
   public error: string | null = null;
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(private httpService: HttpService, private userService: UserService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -21,10 +22,10 @@ export class SignupComponent implements OnInit {
   submitHandler(form: NgForm): void {
     this.isLoading = true;
     const {fullname: name, email, password} = form.value;
-    const sub = this.authService.post('/auth/sign-up', {name, email, password}).subscribe((data) => {
+    const sub = this.httpService.post('/auth/sign-up', {name, email, password}).subscribe((data) => {
       this.error = null;
       const {user} = data;
-      this.authService.setUser(user);
+      this.userService.setUser(user);
       this.isLoading = false;
       sub.unsubscribe();
       void this.router.navigateByUrl('/');

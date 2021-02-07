@@ -16,7 +16,7 @@ import {
   SIGNED_PRE_KEY_PREFIX,
   IDENTITY_PREFIX,
 } from './constants';
-import { Storage } from './storage';
+import { StorageBackend } from './storage-backend';
 
 export interface Store extends StorageType {
   storeLocalRegistrationId: (registrationId: number) => Promise<void>;
@@ -24,11 +24,13 @@ export interface Store extends StorageType {
   storeIdentityKeyPair: (identityKeyPair: KeyPairType) => Promise<void>;
 }
 
+export const STORAGE_BACKEND_INJECTION_TOKEN = 'STORAGE_BACKEND_INJECTION_TOKEN';
+
 @Injectable()
 export class SignalProtocolStore implements Store {
   constructor(
-    @Inject('STORAGE-BACKEND')
-    private store: Storage
+    @Inject(STORAGE_BACKEND_INJECTION_TOKEN)
+    private storageBackend: StorageBackend
   ) {}
 
   async get(key: string, defaultValue: StoreValue): Promise<StoreValue> {
@@ -36,14 +38,14 @@ export class SignalProtocolStore implements Store {
       throw new Error('Tried to get value for undefined/null key');
     }
 
-    return (await this.store.get(key)) || defaultValue;
+    return (await this.storageBackend.get(key)) || defaultValue;
   }
 
   async remove(key: string): Promise<void> {
     if (key === null || key === undefined) {
       throw new Error('Tried to remove value for undefined/null key');
     }
-    await this.store.remove(key);
+    await this.storageBackend.remove(key);
   }
 
   async put(key: string, value: StoreValue): Promise<void> {
@@ -55,11 +57,11 @@ export class SignalProtocolStore implements Store {
     ) {
       throw new Error('Tried to store undefined/null');
     }
-    await this.store.save(key, value);
+    await this.storageBackend.save(key, value);
   }
 
   async storeIdentityKeyPair(identityKeyPair: KeyPairType): Promise<void> {
-    await this.store.save(IDENTITY_KEY, identityKeyPair);
+    await this.storageBackend.save(IDENTITY_KEY, identityKeyPair);
   }
 
   async getIdentityKeyPair(): Promise<KeyPairType | undefined> {
@@ -71,7 +73,7 @@ export class SignalProtocolStore implements Store {
   }
 
   async storeLocalRegistrationId(registrationId: number): Promise<void> {
-    await this.store.save(REGISTRATION_ID, registrationId);
+    await this.storageBackend.save(REGISTRATION_ID, registrationId);
   }
 
   async getLocalRegistrationId(): Promise<number | undefined> {
@@ -212,9 +214,9 @@ export class SignalProtocolStore implements Store {
   }
 
   async removeAllSessions(identifier: string): Promise<void> {
-    for (const key in await this.store.keys()) {
+    for (const key in await this.storageBackend.keys()) {
       if (key.startsWith(SESSION_PREFIX + identifier)) {
-        await this.store.remove(key);
+        await this.storageBackend.remove(key);
       }
     }
   }

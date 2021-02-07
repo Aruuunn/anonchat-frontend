@@ -1,4 +1,4 @@
-export interface Storage {
+export interface StorageBackend {
   save: (key: string, data: any) => Promise<void>;
   get: (key: string) => Promise<any>;
   remove: (key: string) => Promise<void>;

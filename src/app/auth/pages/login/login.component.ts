@@ -1,8 +1,8 @@
-import {Component, EventEmitter, OnInit, Output,} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {NgForm} from '@angular/forms';
-import {isNotNullOrUndefined} from 'codelyzer/util/isNotNullOrUndefined';
-import {AuthService} from '../../auth.service';
 import {Router} from '@angular/router';
+import {UserService} from '../../../shared/user/user.service';
+import {HttpService} from '../../../shared/http/http.service';
 
 @Component({
   selector: 'app-login',
@@ -10,22 +10,19 @@ import {Router} from '@angular/router';
   styleUrls: ['../../../../styles/common.scss', '../../../../styles/palette.scss']
 })
 export class LoginComponent implements OnInit {
-  @Output() afterLogin: EventEmitter<any> = new EventEmitter<any>();
   public isLoading = false;
   public error: null | string = null;
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(private httpService: HttpService, private userService: UserService, private router: Router) {
   }
 
   loginHandler(form: NgForm): void {
     const {email, password} = form.value;
-    console.assert(isNotNullOrUndefined(email), 'Email has to be Defined and Non Null');
-    console.assert(isNotNullOrUndefined(password), 'Password has to be Defined and Non Null');
     this.isLoading = true;
-    const sub = this.authService.post('/auth/sign-in', {email, password}).subscribe((data) => {
+    const sub = this.httpService.post('/auth/sign-in', {email, password}).subscribe((data) => {
       const {user} = data;
       this.error = null;
-      this.authService.setUser(user);
+      this.userService.setUser(user);
       this.isLoading = false;
       form.controls?.password?.reset();
       sub.unsubscribe();
