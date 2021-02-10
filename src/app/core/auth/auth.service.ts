@@ -1,5 +1,5 @@
 import {Injectable, OnDestroy} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject,} from 'rxjs';
 
 interface AuthState {
   accessToken: string | null;
@@ -9,7 +9,9 @@ const initialAuthState: AuthState = {
   accessToken: sessionStorage.getItem('accessToken'),
 };
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class AuthService implements OnDestroy {
   public state: BehaviorSubject<AuthState> = new BehaviorSubject<AuthState>(initialAuthState);
 

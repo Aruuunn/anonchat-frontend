@@ -7,7 +7,7 @@ $gray-lighter: #F4F4F4;
 $green: #43B581;
 $green-darker: #43b581;
 
-$colors:"black-1" $black-1,"black-2" $black-2,"black-3" $black-3,"black-4" $black-4,"gray" $gray,"gray-ligher" $gray-lighter,"green" $green,"green-darker" $green-darker;
+$colors:"black-1" $black-1,"black-2" $black-2,"black-3" $black-3,"black-4" $black-4,"gray" $gray,"gray-lighter" $gray-lighter,"green" $green,"green-darker" $green-darker;
 
 @each $name , $color in $colors {
 .bg-#{$name} {
@@ -15,4 +15,9 @@ $colors:"black-1" $black-1,"black-2" $black-2,"black-3" $black-3,"black-4" $blac
   }
 }
 
+@each $name , $color in $colors {
+  .text-#{$name} {
+    color: $color;
+  }
+}
 

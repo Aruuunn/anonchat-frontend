@@ -1,10 +1,12 @@
 import {Injectable} from '@angular/core';
 import io from 'socket.io-client';
-import {AuthService} from '../../auth/auth.service';
+import {AuthService} from '../auth/auth.service';
 import {Router} from '@angular/router';
 import {Events} from './events.enum';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class WebsocketsService {
 
   private ws: SocketIOClient.Socket | undefined;
@@ -40,7 +42,7 @@ export class WebsocketsService {
   }
 
   public addEventListener(event: string, callback: (...data: any[]) => void): void {
-    this.websocket?.addEventListener(event, callback);
+    this.ws?.addEventListener(event, callback);
   }
 
   public emit(event: string, payload: object, ack: (...args: any[]) => void = () => {

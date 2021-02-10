@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {AuthService} from '../../auth/auth.service';
+import {AuthService} from '../auth/auth.service';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import urlJoin from 'url-join';
@@ -8,7 +8,9 @@ import {HttpOptions} from './http-options.interface';
 import {API_BASE_URL} from '../../../config/api.config';
 
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class HttpService {
   constructor(private authService: AuthService, private http: HttpClient) {
   }

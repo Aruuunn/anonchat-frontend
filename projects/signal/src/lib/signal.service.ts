@@ -23,7 +23,9 @@ export interface Bundle {
 
 export const SIGNAL_PROTOCOL_STORE_INJECTION_TOKEN = 'SIGNAL_PROTOCOL_STORE_INJECTION_TOKEN';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SignalService {
   constructor(
     @Inject(SIGNAL_PROTOCOL_STORE_INJECTION_TOKEN)
