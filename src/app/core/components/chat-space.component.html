@@ -5,8 +5,28 @@
       {{ currentChat }}
     </h2>
   </div>
-  <div style="height: 80vh;" class="w-full mt-10 bg-black-1 rounded-xl">
-
+  <div style="height: 80vh;" class="w-full mt-10 p-3 bg-black-1 rounded-xl">
+    <div aria-label="chat messages" style="height: calc( 100% - 45px ); overflow: auto">
+      <div class="relative mt-2">
+        <img src="assets/gray-triangle.svg" style="top: 25%;" class="absolute left-0" alt="">
+        <div style="min-width: 150px; max-width: 30%"
+             class="bg-black-4  text-white rounded-lg inline-block ml-6 pt-2 pb-2 pl-3 pr-3">
+          Hey!
+        </div>
+      </div>
+      <div class="relative mt-2 w-full flex justify-end">
+        <img src="assets/green-triangle.svg" style="top: 25%;" class="absolute right-0" alt="">
+        <div style="min-width: 150px; max-width: 30%"
+             class="bg-green-darker text-white rounded-lg inline-block mr-6 pt-2 pb-2 pl-3 pr-3">
+          Hey!
+        </div>
+      </div>
+    </div>
+    <div class="relative">
+      <img src="assets/add-icon.svg" alt="new message" class="absolute top-0">
+      <input placeholder="Message Pumpkin" style="height: 45px;padding-left: 60px"
+             class="w-full rounded text-field box-border"/>
+    </div>
   </div>
 </div>
 
