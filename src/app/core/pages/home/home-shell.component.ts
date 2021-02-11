@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {BehaviorSubject} from 'rxjs';
 
 
 @Component({
@@ -7,4 +8,7 @@ import {Component} from '@angular/core';
   styleUrls: ['../../../../styles/palette.scss']
 })
 export class HomeShellComponent {
+
+  isInvitationShareModalOpen = new BehaviorSubject<boolean>(false);
+
 }

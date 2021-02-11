@@ -7,6 +7,7 @@ import {SignalModule} from '../../projects/signal/src/lib/signal.module';
 import {HttpClientModule} from '@angular/common/http';
 import {CoreModule} from './core/core.module';
 import {AuthService} from './core/auth/auth.service';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,7 @@ import {AuthService} from './core/auth/auth.service';
     AppRoutingModule,
     SignalModule,
     HttpClientModule,
-    CoreModule
+    CoreModule,
   ],
   providers: [forwardRef(() => AuthService)],
   bootstrap: [AppComponent]
