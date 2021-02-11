@@ -17,7 +17,7 @@ export class ShareInvitationComponent {
   @ViewChild('infoText') infoTextEl: ElementRef | undefined;
 
   get invitationLink(): string {
-    return urlJoin(window.location.href, `/invitation/${this.userService.user?.invitationId}`);
+    return urlJoin(window.location.href, `/accept-invitation/${this.userService.user?.invitationId}`);
   }
 
   copyLink(): void {
