@@ -24,7 +24,7 @@ export class HomeComponent implements OnInit {
   ) {
   }
 
-  currentChatId: null | string  = null;
+  currentChatId: null | string = null;
   isInvitationShareModalOpen = new BehaviorSubject<boolean>(false);
 
   async sendMessage(message: string): Promise<void> {
@@ -47,6 +47,7 @@ export class HomeComponent implements OnInit {
           console.log('sent ack that all not delivered messages are delivered....', data);
           this.websocketService.emit(Events.CREATE_SELF_ROOM, {}, () => {
             console.log('Created Self room...');
+            this.websocketService.removeEventListener(Events.SEND_MESSAGE);
             this.websocketService.addEventListener(
               Events.SEND_MESSAGE, (payload: { chatId: string, message: MessageType, messageId: string }) => {
                 const {message, chatId, messageId} = payload;

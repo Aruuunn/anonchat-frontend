@@ -60,7 +60,7 @@ export class ChatService {
   async getChat(chatId: string): Promise<ChatInterface> {
     return this.chats.find((chat) => chat.id === chatId) ?? await new Promise((res, rej) => {
       // tslint:disable-next-line:no-shadowed-variable
-      this.websocketService.emit(Events.FETCH_RECIPIENT_ID, ({recipientId}: { recipientId: string }) => {
+      this.websocketService.emit(Events.FETCH_RECIPIENT_ID, {chatId}, ({recipientId}: { recipientId: string }) => {
         this.newChat(chatId, recipientId);
         res(this.chats[0]);
       });

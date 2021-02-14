@@ -53,6 +53,10 @@ export class WebsocketsService {
     this.ws.emit(event, {...payload}, ack);
   }
 
+  public removeEventListener(event: string): void {
+    this.ws?.off(event);
+  }
+
   public closeConnection(): void {
     if (typeof this.ws !== 'undefined') {
       this.ws.close();
