@@ -15,9 +15,9 @@
     <input type="text" placeholder="Eg.  Luke Skywalker" name="fullName" id="fullName" ngModel pattern="^[a-zA-Z ?]+"
            class="rounded text-field" required/>
     <p class="text-red-400"
-       *ngIf="!form.controls.fullName.valid && form.controls.fullName.touched">
-      *{{form.controls.fullName.getError('required') ? "Name is required. " : null }}
-      {{form.controls.fullName.getError('pattern') ? "Name should only contain alphabets. " : null }}
+       *ngIf="!form.controls.fullName?.valid && form.controls.fullName?.touched">
+      *{{form.controls.fullName?.getError('required') ? "Name is required. " : null }}
+      {{form.controls.fullName?.getError('pattern') ? "Name should only contain alphabets. " : null }}
     </p>
     <button type="submit" class="btn btn-green mt-4">Continue</button>
   </form>

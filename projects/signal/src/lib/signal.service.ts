@@ -69,9 +69,9 @@ export class SignalService {
     return signedPreKey;
   }
 
-  async establishSession(bundle: DeviceType, userId: string, deviceId: number): Promise<SessionCipher | null> {
+  async establishSession(bundle: DeviceType, recipientId: string, deviceId: number): Promise<SessionCipher | null> {
     try {
-      const recipientAddress = new SignalProtocolAddress(userId, deviceId);
+      const recipientAddress = new SignalProtocolAddress(recipientId, deviceId);
       const sessionBuilder = new SessionBuilder(this.store, recipientAddress);
       await sessionBuilder.processPreKey(bundle);
       return new SessionCipher(this.store, recipientAddress);

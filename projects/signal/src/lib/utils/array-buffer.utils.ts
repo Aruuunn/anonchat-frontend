@@ -15,6 +15,12 @@ export function convertAllBufferStringToArrayBuffer(
       const binaryString = atob(objClone[key].slice(ARRAY_BUFFER_PREFIX.length));
       objClone[key] = binaryStringToArrayBuffer(binaryString);
       console.assert(objClone[key] instanceof ArrayBuffer);
+    } else if (objClone[key] instanceof Array) {
+      for (let i = 0; i < objClone[key].length; i++) {
+        if (typeof objClone[key][i] === 'object') {
+          objClone[key][i] = convertAllBufferStringToArrayBuffer(objClone[key][i]);
+        }
+      }
     } else if (typeof objClone[key] === 'object') {
       objClone[key] = convertAllBufferStringToArrayBuffer(objClone[key]);
     }
@@ -29,7 +35,13 @@ export function convertAllArrayBufferToString(
   for (const key of Object.keys(objClone)) {
     if (objClone[key] instanceof ArrayBuffer) {
       objClone[key] = ARRAY_BUFFER_PREFIX + btoa(arrayBufferToString(objClone[key]));
-    } else if (objClone[key] instanceof Object) {
+    } else if (objClone[key] instanceof Array) {
+      for (let i = 0; i < objClone[key].length; i++) {
+        if (typeof objClone[key][i] === 'object') {
+          objClone[key][i] = convertAllArrayBufferToString(objClone[key][i]);
+        }
+      }
+    } else if (typeof objClone[key] === 'object') {
       objClone[key] = convertAllArrayBufferToString(objClone[key]);
     }
   }

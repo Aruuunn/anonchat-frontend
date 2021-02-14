@@ -12,12 +12,18 @@ export class WebstorageAdapter implements StorageBackend {
   }
 
   private serializeData(data: any): string {
+    if (typeof data !== 'object') {
+      return JSON.stringify(data);
+    }
     const dataWithSerializedArrayBuffer = convertAllArrayBufferToString(data);
     return JSON.stringify(dataWithSerializedArrayBuffer);
   }
 
   private deserializeData(data: string): any {
     const parsedData = JSON.parse(data);
+    if (typeof parsedData !== 'object') {
+      return parsedData;
+    }
     return convertAllBufferStringToArrayBuffer(parsedData);
   }
 

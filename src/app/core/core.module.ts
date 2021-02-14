@@ -12,6 +12,8 @@ import {USER_SERVICE_STORAGE_INJECTION_TOKEN, UserService} from './user/user.ser
 import {ShareInvitationComponent} from './pages/home/share-invitation.component';
 import {HttpService} from './http/http.service';
 import {InvitationDetailsResolver} from './resolvers/invitation-details.resolver';
+import {ChatService} from './chat/chat.service';
+import {AuthGuard} from './auth/auth.guard';
 
 
 @NgModule({
@@ -37,7 +39,9 @@ import {InvitationDetailsResolver} from './resolvers/invitation-details.resolver
       useValue: localStorage
     },
     HttpService,
-    InvitationDetailsResolver
+    InvitationDetailsResolver,
+    ChatService,
+    AuthGuard
   ],
   exports: [
     HomeComponent,

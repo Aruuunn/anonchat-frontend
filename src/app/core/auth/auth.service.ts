@@ -3,10 +3,12 @@ import {BehaviorSubject,} from 'rxjs';
 
 interface AuthState {
   accessToken: string | null;
+  isLoggedIn: boolean;
 }
 
 const initialAuthState: AuthState = {
   accessToken: sessionStorage.getItem('accessToken'),
+  isLoggedIn: sessionStorage.getItem('isLoggedIn') === 'true'
 };
 
 @Injectable({
@@ -17,6 +19,16 @@ export class AuthService implements OnDestroy {
 
   constructor() {
   }
+
+  get isLoggedIn(): boolean {
+    return this.state.getValue().isLoggedIn;
+  }
+
+  set isLoggedIn(value) {
+    sessionStorage.setItem('isLoggedIn', `${value}`);
+    this.state.next({...this.state.getValue(), isLoggedIn: value});
+  }
+
 
   get accessToken(): string | null {
     return this.state.getValue().accessToken;

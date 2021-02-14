@@ -4,10 +4,10 @@ import {
   SessionRecordType,
   SignalProtocolAddress,
 } from '@privacyresearch/libsignal-protocol-typescript';
-import { Inject, Injectable } from '@angular/core';
-import { arrayBufferToString } from '@privacyresearch/libsignal-protocol-typescript/lib/helpers';
-import { StoreValue, KeyPairType } from './signal-protocol-store.interfaces';
-import { isArrayBuffer, isKeyPairType } from './type-gaurds.util';
+import {Inject, Injectable} from '@angular/core';
+import {arrayBufferToString} from '@privacyresearch/libsignal-protocol-typescript/lib/helpers';
+import {StoreValue, KeyPairType} from './signal-protocol-store.interfaces';
+import {isArrayBuffer, isKeyPairType} from './type-gaurds.util';
 import {
   IDENTITY_KEY,
   REGISTRATION_ID,
@@ -16,7 +16,7 @@ import {
   SIGNED_PRE_KEY_PREFIX,
   IDENTITY_PREFIX,
 } from './constants';
-import { StorageBackend } from './storage-backend';
+import {StorageBackend} from './storage-backend';
 
 export interface Store extends StorageType {
   storeLocalRegistrationId: (registrationId: number) => Promise<void>;
@@ -31,7 +31,8 @@ export class SignalProtocolStore implements Store {
   constructor(
     @Inject(STORAGE_BACKEND_INJECTION_TOKEN)
     private storageBackend: StorageBackend
-  ) {}
+  ) {
+  }
 
   async get(key: string, defaultValue: StoreValue): Promise<StoreValue> {
     if (key === null || key === undefined) {
@@ -100,14 +101,14 @@ export class SignalProtocolStore implements Store {
     }
     return Promise.resolve(
       arrayBufferToString(identityKey) ===
-        arrayBufferToString(trusted as ArrayBuffer)
+      arrayBufferToString(trusted as ArrayBuffer)
     );
   }
 
   async loadPreKey(keyId: string | number): Promise<KeyPairType | undefined> {
     let res = await this.get(PRE_KEY_PREFIX + keyId, undefined);
     if (isKeyPairType(res)) {
-      res = { pubKey: res.pubKey, privKey: res.privKey };
+      res = {pubKey: res.pubKey, privKey: res.privKey};
       return res;
     } else if (typeof res === 'undefined') {
       return res;
@@ -124,7 +125,7 @@ export class SignalProtocolStore implements Store {
     } else if (typeof rec === 'undefined') {
       return rec;
     }
-    throw new Error(`session record is not an ArrayBuffer`);
+    throw new Error(`session record is not an ArrayBuffer ${JSON.stringify(rec)}`);
   }
 
   async loadSignedPreKey(
@@ -132,7 +133,7 @@ export class SignalProtocolStore implements Store {
   ): Promise<KeyPairType | undefined> {
     const res = await this.get(SIGNED_PRE_KEY_PREFIX + keyId, undefined);
     if (isKeyPairType(res)) {
-      return { pubKey: res.pubKey, privKey: res.privKey };
+      return {pubKey: res.pubKey, privKey: res.privKey};
     } else if (typeof res === 'undefined') {
       return res;
     }
@@ -165,7 +166,7 @@ export class SignalProtocolStore implements Store {
     return !!(
       existing &&
       arrayBufferToString(identityKey) !==
-        arrayBufferToString(existing as ArrayBuffer)
+      arrayBufferToString(existing as ArrayBuffer)
     );
   }
 
@@ -173,6 +174,7 @@ export class SignalProtocolStore implements Store {
     identifier: string,
     record: SessionRecordType
   ): Promise<void> {
+    console.log('saving session', record);
     return this.put(SESSION_PREFIX + identifier, record);
   }
 

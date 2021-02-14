@@ -1,6 +1,7 @@
 import {NgModule} from '@angular/core';
 import {SignalProtocolStore, STORAGE_BACKEND_INJECTION_TOKEN} from './signal-protocol-store/signal-protocol-store';
 import {SIGNAL_PROTOCOL_STORE_INJECTION_TOKEN, SignalService} from './signal.service';
+import {WEB_STORAGE_INJECTION_TOKEN, WebstorageAdapter} from './signal-protocol-store/storages/webstorage.adapter';
 import {InMemoryStorage} from './signal-protocol-store/storages/in-memory';
 
 @NgModule({
@@ -11,9 +12,13 @@ import {InMemoryStorage} from './signal-protocol-store/storages/in-memory';
     useClass: InMemoryStorage,
     provide: STORAGE_BACKEND_INJECTION_TOKEN
   }, {
-    useClass: SignalProtocolStore,
-    provide: SIGNAL_PROTOCOL_STORE_INJECTION_TOKEN
-  }, SignalService],
+    useValue: sessionStorage,
+    provide: WEB_STORAGE_INJECTION_TOKEN
+  }
+    , {
+      useClass: SignalProtocolStore,
+      provide: SIGNAL_PROTOCOL_STORE_INJECTION_TOKEN
+    }, SignalService],
 })
 export class SignalModule {
 }
