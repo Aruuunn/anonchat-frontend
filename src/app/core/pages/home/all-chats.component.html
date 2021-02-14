@@ -3,7 +3,7 @@
     <img src="../../../../assets/logo.svg" alt="logo" class="mr-2"/> AnonChat</h1>
   <div class="flex-col items-center p-3">
     <div *ngFor="let chat of chatService.fetchAllChats()" (click)="changeCurrentChat?.emit(chat.id)"
-         [ngClass]="{ 'bg-green': chat.id=== currentChatId}" class="w-full mt-2 rounded-lg p-5 text-white h-28">
+         [ngClass]="{ 'bg-green': chat.id=== currentChatId }" class="w-full mt-2 rounded-lg p-5 bg-black-5 text-white h-28">
       <h3 class="font-bold">{{chat.name ? chat.name : "Anonymous" }}</h3>
       <p class="mt-3">
         ...

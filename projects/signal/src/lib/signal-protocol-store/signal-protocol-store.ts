@@ -17,6 +17,7 @@ import {
   IDENTITY_PREFIX,
 } from './constants';
 import {StorageBackend} from './storage-backend';
+import {convertAllBufferStringToArrayBuffer} from '../utils/array-buffer.utils';
 
 export interface Store extends StorageType {
   storeLocalRegistrationId: (registrationId: number) => Promise<void>;
@@ -90,18 +91,19 @@ export class SignalProtocolStore implements Store {
     identityKey: ArrayBuffer,
     _: Direction
   ): Promise<boolean> {
+    console.log({identifier, identityKey});
     if (identifier === null || identifier === undefined) {
       throw new Error('tried to check identity key for undefined/null key');
     }
     const trusted = await this.get(IDENTITY_PREFIX + identifier, undefined);
-
+    console.log({trusted, k: IDENTITY_PREFIX + identifier});
     // TODO: Is this right? If the ID is NOT in our store we trust it?
     if (trusted === undefined) {
       return Promise.resolve(true);
     }
     return Promise.resolve(
       arrayBufferToString(identityKey) ===
-      arrayBufferToString(trusted as ArrayBuffer)
+      arrayBufferToString((trusted) as ArrayBuffer)
     );
   }
 

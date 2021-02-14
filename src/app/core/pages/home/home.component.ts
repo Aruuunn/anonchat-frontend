@@ -27,16 +27,6 @@ export class HomeComponent implements OnInit {
   currentChatId: null | string = null;
   isInvitationShareModalOpen = new BehaviorSubject<boolean>(false);
 
-  async sendMessage(message: string): Promise<void> {
-    if (this.currentChatId !== null && message && message.trim().length !== 0) {
-      console.log('Sending Message');
-      const textEncoder = new TextEncoder();
-      const ciphertext = textEncoder.encode(message);
-      this.websocketService.emit(Events.SEND_MESSAGE, {ciphertext, chatId: this.currentChatId}, (payload) => {
-        console.log(`Sent the Message ${payload}`);
-      });
-    }
-  }
 
   ngOnInit(): void {
     this.websocketService.connectToWs(WEBSOCKET_URI);

@@ -5,39 +5,31 @@ import {convertAllArrayBufferToString, convertAllBufferStringToArrayBuffer} from
 export const WEB_STORAGE_INJECTION_TOKEN = 'WEB_STORAGE_INJECTION_TOKEN';
 
 @Injectable()
-export class WebstorageAdapter implements StorageBackend {
+export class WebStorageAdapter implements StorageBackend {
   constructor(
     @Inject(WEB_STORAGE_INJECTION_TOKEN)
     private webStorage: Storage) {
   }
 
-  private serializeData(data: any): string {
-    if (typeof data !== 'object') {
-      return JSON.stringify(data);
-    }
-    const dataWithSerializedArrayBuffer = convertAllArrayBufferToString(data);
-    return JSON.stringify(dataWithSerializedArrayBuffer);
-  }
+  private serializeData = (data: any): string => {
+    return JSON.stringify(convertAllArrayBufferToString(data));
+  };
 
-  private deserializeData(data: string): any {
+  private deserializeData = (data: string): any => {
     const parsedData = JSON.parse(data);
-    if (typeof parsedData !== 'object') {
-      return parsedData;
-    }
     return convertAllBufferStringToArrayBuffer(parsedData);
-  }
+  };
 
   async save(key: string, data: any): Promise<void> {
     this.webStorage.setItem(key, this.serializeData(data));
   }
 
   async get(key: string): Promise<any> {
-    const data = this.webStorage.getItem(key);
-
-    if (data === null) {
+    const storedData = this.webStorage.getItem(key);
+    if (storedData === null) {
       return undefined;
     } else {
-      return this.deserializeData(data);
+      return this.deserializeData(storedData);
     }
   }
 
@@ -54,6 +46,7 @@ export class WebstorageAdapter implements StorageBackend {
   }
 
   async keys(): Promise<string[]> {
+    console.assert(this.webStorage !== null && typeof this.webStorage !== 'undefined', 'WebStorage is undefined');
     return Object.keys(this.webStorage);
   }
 

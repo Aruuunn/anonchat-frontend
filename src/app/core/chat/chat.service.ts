@@ -8,6 +8,7 @@ import {Events} from '../websockets/events.enum';
 import {convertAllBufferStringToArrayBuffer} from '../../../../projects/signal/src/lib/utils/array-buffer.utils';
 
 
+// @TODO provide storage backend through DI
 @Injectable({
   providedIn: 'root'
 })
@@ -20,11 +21,11 @@ export class ChatService {
 
   private sessionCiphers: Record<string, SessionCipher> = {};
 
-  chats: ChatInterface[] = JSON.parse(sessionStorage.getItem('chats') as string) ?? [];
+  chats: ChatInterface[] = JSON.parse(localStorage.getItem('chats') as string) ?? [];
 
   saveChats(chats: ChatInterface[]): void {
     this.chats = [...chats];
-    sessionStorage.setItem('chats', JSON.stringify(chats));
+    localStorage.setItem('chats', JSON.stringify(chats));
   }
 
   newChat(chatId: string, recipientId: string, bundle?: DeviceType<string>, name?: string): void {
@@ -55,6 +56,15 @@ export class ChatService {
       return null;
     }
     return chat.name ?? 'Anonymous';
+  }
+
+  newMessageSentByLocalUser(chatId: string, message: string): void {
+    // tslint:disable-next-line:no-shadowed-variable
+    const chat = this.chats.find((chat) => chat.id === chatId);
+    if (chat) {
+      chat.messages.push({message, type: MessageTypeEnum.SENT});
+      this.updateChat(chat);
+    }
   }
 
   async getChat(chatId: string): Promise<ChatInterface> {

@@ -20,8 +20,12 @@ export class ChatSpaceComponent {
       return;
     }
     console.log('submitting...', this.messageText);
+    const chatId = this.currentChatId;
+    const messageText = this.messageText;
     this.chatService.sendMessage(this.currentChatId, this.messageText).then(() => {
       console.log('message sent');
+      this.messageText = '';
+      this.chatService.newMessageSentByLocalUser(chatId, messageText);
     });
   }
 
