@@ -4,10 +4,10 @@ import {
   SessionRecordType,
   SignalProtocolAddress,
 } from '@privacyresearch/libsignal-protocol-typescript';
-import { Inject, Injectable } from '@angular/core';
-import { arrayBufferToString } from '@privacyresearch/libsignal-protocol-typescript/lib/helpers';
-import { StoreValue, KeyPairType } from './signal-protocol-store.interfaces';
-import { isArrayBuffer, isKeyPairType } from './type-gaurds.util';
+import {Inject, Injectable} from '@angular/core';
+import {arrayBufferToString} from '@privacyresearch/libsignal-protocol-typescript/lib/helpers';
+import {StoreValue, KeyPairType} from './signal-protocol-store.interfaces';
+import {isArrayBuffer, isKeyPairType} from './type-gaurds.util';
 import {
   IDENTITY_KEY,
   REGISTRATION_ID,
@@ -16,7 +16,8 @@ import {
   SIGNED_PRE_KEY_PREFIX,
   IDENTITY_PREFIX,
 } from './constants';
-import { Storage } from './storage';
+import {StorageBackend} from './storage-backend';
+import {convertAllBufferStringToArrayBuffer} from '../utils/array-buffer.utils';
 
 export interface Store extends StorageType {
   storeLocalRegistrationId: (registrationId: number) => Promise<void>;
@@ -24,26 +25,29 @@ export interface Store extends StorageType {
   storeIdentityKeyPair: (identityKeyPair: KeyPairType) => Promise<void>;
 }
 
+export const STORAGE_BACKEND_INJECTION_TOKEN = 'STORAGE_BACKEND_INJECTION_TOKEN';
+
 @Injectable()
 export class SignalProtocolStore implements Store {
   constructor(
-    @Inject('STORAGE-BACKEND')
-    private store: Storage
-  ) {}
+    @Inject(STORAGE_BACKEND_INJECTION_TOKEN)
+    private storageBackend: StorageBackend
+  ) {
+  }
 
   async get(key: string, defaultValue: StoreValue): Promise<StoreValue> {
     if (key === null || key === undefined) {
       throw new Error('Tried to get value for undefined/null key');
     }
 
-    return (await this.store.get(key)) || defaultValue;
+    return (await this.storageBackend.get(key)) || defaultValue;
   }
 
   async remove(key: string): Promise<void> {
     if (key === null || key === undefined) {
       throw new Error('Tried to remove value for undefined/null key');
     }
-    await this.store.remove(key);
+    await this.storageBackend.remove(key);
   }
 
   async put(key: string, value: StoreValue): Promise<void> {
@@ -55,11 +59,11 @@ export class SignalProtocolStore implements Store {
     ) {
       throw new Error('Tried to store undefined/null');
     }
-    await this.store.save(key, value);
+    await this.storageBackend.save(key, value);
   }
 
   async storeIdentityKeyPair(identityKeyPair: KeyPairType): Promise<void> {
-    await this.store.save(IDENTITY_KEY, identityKeyPair);
+    await this.storageBackend.save(IDENTITY_KEY, identityKeyPair);
   }
 
   async getIdentityKeyPair(): Promise<KeyPairType | undefined> {
@@ -71,7 +75,7 @@ export class SignalProtocolStore implements Store {
   }
 
   async storeLocalRegistrationId(registrationId: number): Promise<void> {
-    await this.store.save(REGISTRATION_ID, registrationId);
+    await this.storageBackend.save(REGISTRATION_ID, registrationId);
   }
 
   async getLocalRegistrationId(): Promise<number | undefined> {
@@ -87,25 +91,26 @@ export class SignalProtocolStore implements Store {
     identityKey: ArrayBuffer,
     _: Direction
   ): Promise<boolean> {
+    console.log({identifier, identityKey});
     if (identifier === null || identifier === undefined) {
       throw new Error('tried to check identity key for undefined/null key');
     }
     const trusted = await this.get(IDENTITY_PREFIX + identifier, undefined);
-
+    console.log({trusted, k: IDENTITY_PREFIX + identifier});
     // TODO: Is this right? If the ID is NOT in our store we trust it?
     if (trusted === undefined) {
       return Promise.resolve(true);
     }
     return Promise.resolve(
       arrayBufferToString(identityKey) ===
-        arrayBufferToString(trusted as ArrayBuffer)
+      arrayBufferToString((trusted) as ArrayBuffer)
     );
   }
 
   async loadPreKey(keyId: string | number): Promise<KeyPairType | undefined> {
     let res = await this.get(PRE_KEY_PREFIX + keyId, undefined);
     if (isKeyPairType(res)) {
-      res = { pubKey: res.pubKey, privKey: res.privKey };
+      res = {pubKey: res.pubKey, privKey: res.privKey};
       return res;
     } else if (typeof res === 'undefined') {
       return res;
@@ -122,7 +127,7 @@ export class SignalProtocolStore implements Store {
     } else if (typeof rec === 'undefined') {
       return rec;
     }
-    throw new Error(`session record is not an ArrayBuffer`);
+    throw new Error(`session record is not an ArrayBuffer ${JSON.stringify(rec)}`);
   }
 
   async loadSignedPreKey(
@@ -130,7 +135,7 @@ export class SignalProtocolStore implements Store {
   ): Promise<KeyPairType | undefined> {
     const res = await this.get(SIGNED_PRE_KEY_PREFIX + keyId, undefined);
     if (isKeyPairType(res)) {
-      return { pubKey: res.pubKey, privKey: res.privKey };
+      return {pubKey: res.pubKey, privKey: res.privKey};
     } else if (typeof res === 'undefined') {
       return res;
     }
@@ -163,7 +168,7 @@ export class SignalProtocolStore implements Store {
     return !!(
       existing &&
       arrayBufferToString(identityKey) !==
-        arrayBufferToString(existing as ArrayBuffer)
+      arrayBufferToString(existing as ArrayBuffer)
     );
   }
 
@@ -171,6 +176,7 @@ export class SignalProtocolStore implements Store {
     identifier: string,
     record: SessionRecordType
   ): Promise<void> {
+    console.log('saving session', record);
     return this.put(SESSION_PREFIX + identifier, record);
   }
 
@@ -212,9 +218,9 @@ export class SignalProtocolStore implements Store {
   }
 
   async removeAllSessions(identifier: string): Promise<void> {
-    for (const key in await this.store.keys()) {
+    for (const key in await this.storageBackend.keys()) {
       if (key.startsWith(SESSION_PREFIX + identifier)) {
-        await this.store.remove(key);
+        await this.storageBackend.remove(key);
       }
     }
   }

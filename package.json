@@ -8,7 +8,7 @@
     "prestart": "npm run postcss:build",
     "prebuild": "NODE_ENV=production npm run postcss:build",
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve & npm run postcss:watch",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -29,8 +29,10 @@
     "postcss": "^8.2.4",
     "postcss-short": "^5.0.0",
     "rxjs": "~6.6.0",
+    "socket.io-client": "2.3.0",
     "tailwindcss": "^2.0.2",
     "tslib": "^2.0.0",
+    "url-join": "^4.0.1",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
@@ -40,6 +42,8 @@
     "@types/emscripten": "^1.39.4",
     "@types/jasmine": "~3.6.0",
     "@types/node": "^12.11.1",
+    "@types/socket.io-client": "^1.4.35",
+    "@types/url-join": "^4.0.0",
     "codelyzer": "^6.0.0",
     "jasmine-core": "~3.6.0",
     "jasmine-spec-reporter": "~5.0.0",

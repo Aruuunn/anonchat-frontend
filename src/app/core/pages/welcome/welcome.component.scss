@@ -1,0 +1,10 @@
+
+
+.image {}
+
+
+@media (max-height: 690px) {
+  .image{
+    display: none;
+  }
+}

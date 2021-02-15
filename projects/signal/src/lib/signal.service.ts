@@ -1,11 +1,16 @@
 import {Inject, Injectable} from '@angular/core';
 import {
+  DeviceType,
   KeyHelper,
   KeyPairType,
+  MessageType,
   PreKeyPairType,
   PreKeyType,
+  SessionBuilder,
+  SessionCipher,
+  SignalProtocolAddress,
   SignedPreKeyPairType,
-  SignedPublicPreKeyType,
+  SignedPublicPreKeyType
 } from '@privacyresearch/libsignal-protocol-typescript';
 import {Store} from './signal-protocol-store/signal-protocol-store';
 
@@ -16,15 +21,18 @@ export interface Bundle {
   oneTimePreKeys: PreKeyType [];
 }
 
+export const SIGNAL_PROTOCOL_STORE_INJECTION_TOKEN = 'SIGNAL_PROTOCOL_STORE_INJECTION_TOKEN';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SignalService {
   constructor(
-    @Inject('STORE')
+    @Inject(SIGNAL_PROTOCOL_STORE_INJECTION_TOKEN)
     private store: Store) {
   }
 
-  generateRandomId(): number {
+  private generateRandomId(): number {
     return Math.floor(10000 * Math.random());
   }
 
@@ -59,6 +67,43 @@ export class SignalService {
     const signedPreKey = await this.generateSignedPreKey(identityKeyPair);
     await this.store.storeSignedPreKey(signedPreKey.keyId, signedPreKey.keyPair);
     return signedPreKey;
+  }
+
+  async establishSession(bundle: DeviceType, recipientId: string, deviceId: number): Promise<SessionCipher | null> {
+    try {
+      const recipientAddress = new SignalProtocolAddress(recipientId, deviceId);
+      const sessionBuilder = new SessionBuilder(this.store, recipientAddress);
+      await sessionBuilder.processPreKey(bundle);
+      return new SessionCipher(this.store, recipientAddress);
+    } catch (e) {
+      console.error(e);
+    }
+    return null;
+  }
+
+  getSessionCipher(recipientId: string, deviceId: number): SessionCipher {
+    const address = new SignalProtocolAddress(recipientId, deviceId);
+    return new SessionCipher(this.store, address);
+  }
+
+  async decryptMessage(ciphertext: MessageType, sessionCipher: SessionCipher): Promise<ArrayBuffer | undefined> {
+
+    let plaintext: ArrayBuffer | undefined;
+
+    if (ciphertext.type === 3) {
+      // It is a PreKeyWhisperMessage and will establish a session.
+      try {
+        plaintext = await sessionCipher.decryptPreKeyWhisperMessage(ciphertext.body as string, 'binary');
+        console.log({plaintext});
+      } catch (e) {
+        console.error(e);
+        // handle identity key conflict
+      }
+    } else if (ciphertext.type === 1) {
+      // It is a WhisperMessage for an established session.
+      plaintext = await sessionCipher.decryptWhisperMessage(ciphertext.body as string, 'binary');
+    }
+    return plaintext;
   }
 
   async register(): Promise<Bundle> {

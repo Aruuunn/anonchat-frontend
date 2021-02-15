@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Storage } from '../storage';
+import { StorageBackend } from '../storage-backend';
 
 @Injectable()
-export class InMemoryStorage implements Storage {
+export class InMemoryStorage implements StorageBackend {
   private store: { [key: string]: any };
 
   constructor() {

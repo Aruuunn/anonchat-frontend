@@ -24,7 +24,8 @@
         "dist/signal/signal",
         "dist/signal"
       ]
-    }
+    },
+    "allowSyntheticDefaultImports": true
   },
   "angularCompilerOptions": {
     "strictInjectionParameters": true,
