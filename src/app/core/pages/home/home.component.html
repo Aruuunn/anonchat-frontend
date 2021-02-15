@@ -17,10 +17,10 @@
     </div>
   </div>
   <div class="w-full h-screen flex">
-    <div class="w-full md:w-auto">
-      <app-all-chats [currentChatId]="currentChatId" (changeCurrentChat)="currentChatId = $event"></app-all-chats>
+    <div [ngClass]="{ 'hidden md:block':currentChatId.getValue()!==null }" class="w-full md:w-auto">
+      <app-all-chats [currentChatId]="currentChatId" ></app-all-chats>
     </div>
-    <div class="w-full hidden md:block">
+    <div [ngClass]="{ 'hidden': currentChatId.getValue()===null }" class="w-full block">
       <app-chat-space [currentChatId]="currentChatId"></app-chat-space>
     </div>
   </div>

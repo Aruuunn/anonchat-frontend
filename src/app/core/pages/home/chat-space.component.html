@@ -1,13 +1,22 @@
-<div [ngClass]="{ 'hidden':currentChatId===null }" class="h-screen box-border bg-black-3 pt-5 pl-10 pr-10">
+<div [ngClass]="{ 'hidden':currentChatId.getValue()===null }"
+     class="h-screen box-border bg-black-3 pt-2 pl-2 pr-2 md:pt-5 md:pl-10 md:pr-10">
   <div>
-    <h2 class="text-white text-lg font-bold flex ">
-      <img src="../../../../assets/chat-bubble.svg" class="mr-2" alt="">
-      {{ currentChatId !== null && currentChatId !== undefined ? chatService.getChatName(currentChatId) : "" }}
+    <h2 class="text-white text-lg items-center font-bold flex p-2">
+      <button (click)="currentChatId.next(null)" style="padding: 8px;" class="text-gray-lighter mr-2 block md:hidden">
+        <svg style="height: 32px; width: auto;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+             stroke="currentColor">
+          <path stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/>
+        </svg>
+      </button>
+
+      <img src="../../../../assets/chat-bubble.svg" class="mr-2 hidden md:block" alt="">
+      {{chatService.getChatName(currentChatId.getValue())}}
     </h2>
   </div>
   <div style="height: 80vh;" class="w-full mt-10 p-3 bg-black-1 rounded-xl">
     <div aria-label="chat messages" style="height: calc( 100% - 45px ); overflow: auto">
-      <div *ngFor="let message of chatService.getMessages(currentChatId!==null ? currentChatId: '')">
+      <div
+        *ngFor="let message of chatService.getMessages(currentChatId.getValue())">
         <div class="relative mt-2" *ngIf="message.type === 'RECEIVED'">
           <img src="../../../../assets/gray-triangle.svg" style="top: 25%;" class="absolute left-0" alt="">
           <div style="min-width: 150px; max-width: 30%"
@@ -23,14 +32,13 @@
           </div>
         </div>
       </div>
-
     </div>
     <form class="relative" (submit)="onMessageSend()">
       <img src="../../../../assets/add-icon.svg" alt="new message" class="absolute top-0">
       <label for="message" style="display: none">Message to Send</label>
       <input id="message" [(ngModel)]="messageText"
              [ngModelOptions]="{ standalone: true }"
-             placeholder="Message {{  currentChatId !== null && currentChatId !== undefined ? chatService.getChatName(currentChatId) : '' }}"
+             placeholder="Message {{  currentChatId.getValue() !== null && currentChatId.getValue() !== undefined ? chatService.getChatName(currentChatId.getValue()) : '' }}"
              style="height: 45px;padding-left: 60px"
              class="w-full rounded text-field box-border"/>
     </form>

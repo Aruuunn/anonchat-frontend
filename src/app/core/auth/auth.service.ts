@@ -8,7 +8,7 @@ interface AuthState {
 
 const initialAuthState: AuthState = {
   accessToken: sessionStorage.getItem('accessToken'),
-  isLoggedIn: sessionStorage.getItem('isLoggedIn') === 'true'
+  isLoggedIn: localStorage.getItem('isLoggedIn') === 'true'
 };
 
 @Injectable({
@@ -25,7 +25,7 @@ export class AuthService implements OnDestroy {
   }
 
   set isLoggedIn(value) {
-    sessionStorage.setItem('isLoggedIn', `${value}`);
+    localStorage.setItem('isLoggedIn', `${value}`);
     this.state.next({...this.state.getValue(), isLoggedIn: value});
   }
 

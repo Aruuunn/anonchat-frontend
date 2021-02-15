@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {ChatService} from '../../chat/chat.service';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'app-all-chats',
@@ -10,8 +11,5 @@ export class AllChatsComponent {
   constructor(public chatService: ChatService) {
   }
 
-  @Input() currentChatId!: string | null ;
-  @Output() changeCurrentChat: EventEmitter<string> = new EventEmitter<string>();
-
-
+  @Input() currentChatId!: BehaviorSubject<null | string>;
 }

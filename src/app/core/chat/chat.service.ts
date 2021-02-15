@@ -33,7 +33,10 @@ export class ChatService {
     this.saveChats(this.chats);
   }
 
-  getMessages(chatId: string): MessageInterface[] {
+  getMessages(chatId: string | null): MessageInterface[] {
+    if (chatId === null) {
+      return [];
+    }
     // tslint:disable-next-line:no-shadowed-variable
     const chat = this.chats.find((chat) => chat.id === chatId);
     return chat?.messages ?? [];
@@ -49,7 +52,10 @@ export class ChatService {
     this.saveChats(this.chats);
   }
 
-  getChatName(chatId: string): string | null {
+  getChatName(chatId: string | null): string | null {
+    if (chatId === null) {
+      return null;
+    }
     // tslint:disable-next-line:no-shadowed-variable
     const chat = this.chats.find((chat) => chat.id === chatId);
     if (!chat) {

@@ -24,7 +24,7 @@ export class HomeComponent implements OnInit {
   ) {
   }
 
-  currentChatId: null | string = null;
+  currentChatId = new BehaviorSubject<null | string>(null);
   isInvitationShareModalOpen = new BehaviorSubject<boolean>(false);
 
 
