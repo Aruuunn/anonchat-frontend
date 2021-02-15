@@ -1,5 +1,5 @@
 <div [ngClass]="{ 'hidden':currentChatId.getValue()===null }"
-     class="h-screen box-border bg-black-3 pt-2 pl-2 pr-2 md:pt-5 md:pl-10 md:pr-10">
+     class="h-full box-border bg-black-3 pt-2 pl-2 pr-2 md:pt-5 md:pl-10 md:pr-10">
   <div>
     <h2 class="text-white text-lg items-center font-bold flex p-2">
       <button (click)="currentChatId.next(null)" style="padding: 8px;" class="text-gray-lighter mr-2 block md:hidden">
@@ -13,7 +13,7 @@
       {{chatService.getChatName(currentChatId.getValue())}}
     </h2>
   </div>
-  <div style="height: 80vh;" class="w-full mt-10 p-3 bg-black-1 rounded-xl">
+  <div style="height: 80vh;" class="w-full mt-5 p-3 bg-black-1 rounded-xl">
     <div aria-label="chat messages" style="height: calc( 100% - 45px ); overflow: auto">
       <div
         *ngFor="let message of chatService.getMessages(currentChatId.getValue())">

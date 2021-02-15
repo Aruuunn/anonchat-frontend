@@ -1,6 +1,21 @@
-<div class="h-screen bg-black-2 w-full md:w-72">
-  <h1 class="text-gray-400 font-bold p-5 flex">
-    <img src="../../../../assets/logo.svg" alt="logo" class="mr-2"/> AnonChat</h1>
+<div class="h-full bg-black-2 w-full md:w-72">
+  <div class="flex items-center justify-between p-4">
+    <div>
+      <h1 class="text-gray-400 font-bold flex">
+        <img src="../../../../assets/logo.svg" alt="logo" class="mr-2"/> AnonChat</h1>
+    </div>
+    <div class="text-gray md:hidden">
+      <button style="padding: 12px" (click)="isInvitationShareModalOpen.next(true)">
+        <svg style="height: 24px;width: auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+             stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+        </svg>
+      </button>
+
+    </div>
+  </div>
+
   <div class="flex-col items-center p-3">
     <div *ngFor="let chat of chatService.fetchAllChats()" (click)="currentChatId.next(chat.id)"
          [ngClass]="{ 'bg-green': chat.id === currentChatId.getValue() }"

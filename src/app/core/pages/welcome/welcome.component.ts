@@ -29,10 +29,12 @@ export class WelcomeComponent {
 
 
   async submitHandler(form: NgForm): Promise<void> {
+    localStorage.clear();
+    sessionStorage.clear();
+
     const fullName = form.controls.fullName.value?.trim();
     console.assert(typeof fullName !== 'undefined' && fullName !== null, 'FullName has to be defined');
     const bundle = await this.signalService.register();
-    console.log({bundle: convertAllArrayBufferToString(bundle)});
     this.loading = true;
     this.httpService.post('/auth/register', {
       bundle: convertAllArrayBufferToString(bundle),
