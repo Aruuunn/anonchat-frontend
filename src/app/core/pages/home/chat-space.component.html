@@ -1,5 +1,5 @@
 <div [ngClass]="{ 'hidden':currentChatId.getValue()===null }"
-     class="h-screen box-border bg-black-3 pt-2 pl-2 pr-2 md:pt-5 md:pl-10 md:pr-10">
+     class="h-full box-border bg-black-3 pt-2 pl-2 pr-2 md:pt-5 md:pl-10 md:pr-10">
   <div>
     <h2 class="text-white text-lg items-center font-bold flex p-2">
       <button (click)="currentChatId.next(null)" style="padding: 8px;" class="text-gray-lighter mr-2 block md:hidden">
@@ -9,23 +9,23 @@
         </svg>
       </button>
 
-      <img src="../../../../assets/chat-bubble.svg" class="mr-2 hidden md:block" alt="">
+      <img src="assets/chat-bubble.svg" class="mr-2 hidden md:block" alt="">
       {{chatService.getChatName(currentChatId.getValue())}}
     </h2>
   </div>
-  <div style="height: 80vh;" class="w-full mt-10 p-3 bg-black-1 rounded-xl">
+  <div style="height: 80vh;" class="w-full mt-5 p-3 bg-black-1 rounded-xl">
     <div aria-label="chat messages" style="height: calc( 100% - 45px ); overflow: auto">
       <div
         *ngFor="let message of chatService.getMessages(currentChatId.getValue())">
         <div class="relative mt-2" *ngIf="message.type === 'RECEIVED'">
-          <img src="../../../../assets/gray-triangle.svg" style="top: 25%;" class="absolute left-0" alt="">
+          <img src="assets/gray-triangle.svg" style="top: 25%;" class="absolute left-0" alt="">
           <div style="min-width: 150px; max-width: 30%"
                class="bg-black-4  text-white rounded-lg inline-block ml-6 pt-2 pb-2 pl-3 pr-3">
             {{ message.message }}
           </div>
         </div>
         <div class="relative mt-2 w-full flex justify-end" *ngIf="message.type === 'SENT'">
-          <img src="../../../../assets/green-triangle.svg" style="top: 25%;" class="absolute right-0" alt="">
+          <img src="assets/green-triangle.svg" style="top: 25%;" class="absolute right-0" alt="">
           <div style="min-width: 150px; max-width: 30%"
                class="bg-green-darker text-white rounded-lg inline-block mr-6 pt-2 pb-2 pl-3 pr-3">
             {{ message.message }}
@@ -34,7 +34,7 @@
       </div>
     </div>
     <form class="relative" (submit)="onMessageSend()">
-      <img src="../../../../assets/add-icon.svg" alt="new message" class="absolute top-0">
+      <img src="assets/add-icon.svg" alt="new message" class="absolute top-0">
       <label for="message" style="display: none">Message to Send</label>
       <input id="message" [(ngModel)]="messageText"
              [ngModelOptions]="{ standalone: true }"

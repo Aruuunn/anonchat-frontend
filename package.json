@@ -9,10 +9,11 @@
     "prebuild": "NODE_ENV=production npm run postcss:build",
     "ng": "ng",
     "start": "ng serve & npm run postcss:watch",
-    "build": "ng build",
+    "build": "ng build --prod --base-href /anonchat/",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "deploy": "npm run build && ngh -d dist/chat-app --no-dotfiles --no-silent --repo git@github.com:ArunMurugan78/anonchat.git --name ArunMurugan78 --email arunmurugan200@gmail.com"
   },
   "private": true,
   "dependencies": {
@@ -44,6 +45,7 @@
     "@types/node": "^12.11.1",
     "@types/socket.io-client": "^1.4.35",
     "@types/url-join": "^4.0.0",
+    "angular-cli-ghpages": "^1.0.0-rc.1",
     "codelyzer": "^6.0.0",
     "jasmine-core": "~3.6.0",
     "jasmine-spec-reporter": "~5.0.0",

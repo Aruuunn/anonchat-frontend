@@ -17,7 +17,7 @@ import {
   IDENTITY_PREFIX,
 } from './constants';
 import {StorageBackend} from './storage-backend';
-import {convertAllBufferStringToArrayBuffer} from '../utils/array-buffer.utils';
+
 
 export interface Store extends StorageType {
   storeLocalRegistrationId: (registrationId: number) => Promise<void>;
@@ -176,7 +176,6 @@ export class SignalProtocolStore implements Store {
     identifier: string,
     record: SessionRecordType
   ): Promise<void> {
-    console.log('saving session', record);
     return this.put(SESSION_PREFIX + identifier, record);
   }
 

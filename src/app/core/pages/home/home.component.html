@@ -3,22 +3,17 @@
 <div class="w-screen h-screen flex ">
   <div style="width: 70px" class="bg-black-1 h-screen hidden lg:flex flex-col justify-end items-center">
     <div class="mt-1 mb-5">
-      <button style="border-radius: 50%;height: 50px;width: 50px"
-              class="bg-black-3 focus:outline-none focus:ring-2 ring-green-300 flex justify-center items-center">
-        <img src="../../../../assets/search.svg" alt="search chats">
-      </button>
-    </div>
-    <div class="mt-1 mb-5">
       <button (click)="isInvitationShareModalOpen.next(true)"
               style="border-radius: 50%;height: 50px;width: 50px"
               class="bg-black-3 text-green flex justify-center items-center  focus:outline-none focus:ring-2 ring-green-300">
-        <img src="../../../../assets/share-icon.svg" style="height: 30px;width: 30px;" alt="search chats">
+        <img src="assets/share-icon.svg" style="height: 30px;width: 30px;" alt="search chats">
       </button>
     </div>
   </div>
-  <div class="w-full h-screen flex">
+  <div class="w-full h-full flex">
     <div [ngClass]="{ 'hidden md:block':currentChatId.getValue()!==null }" class="w-full md:w-auto">
-      <app-all-chats [currentChatId]="currentChatId" ></app-all-chats>
+      <app-all-chats [isInvitationShareModalOpen]="isInvitationShareModalOpen"
+                     [currentChatId]="currentChatId"></app-all-chats>
     </div>
     <div [ngClass]="{ 'hidden': currentChatId.getValue()===null }" class="w-full block">
       <app-chat-space [currentChatId]="currentChatId"></app-chat-space>

@@ -12,4 +12,5 @@ export class AllChatsComponent {
   }
 
   @Input() currentChatId!: BehaviorSubject<null | string>;
+  @Input() isInvitationShareModalOpen!: BehaviorSubject<boolean>;
 }

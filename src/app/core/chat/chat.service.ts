@@ -9,6 +9,8 @@ import {convertAllBufferStringToArrayBuffer} from '../../../../projects/signal/s
 
 
 // @TODO provide storage backend through DI
+// @TODO refactor this ugly code
+// @TODO modify code to make speed optimal
 @Injectable({
   providedIn: 'root'
 })
@@ -23,6 +25,12 @@ export class ChatService {
 
   chats: ChatInterface[] = JSON.parse(localStorage.getItem('chats') as string) ?? [];
 
+  clearChats(): void {
+    this.chats = [];
+    localStorage.clear();
+    sessionStorage.clear();
+  }
+
   saveChats(chats: ChatInterface[]): void {
     this.chats = [...chats];
     localStorage.setItem('chats', JSON.stringify(chats));
@@ -33,20 +41,54 @@ export class ChatService {
     this.saveChats(this.chats);
   }
 
+  getRecentMessage(chatId: string): MessageInterface | null {
+    const messages = this.getMessages(chatId);
+    return messages.length === 0 ? null : messages[messages.length - 1];
+  }
+
   getMessages(chatId: string | null): MessageInterface[] {
     if (chatId === null) {
       return [];
     }
     // tslint:disable-next-line:no-shadowed-variable
     const chat = this.chats.find((chat) => chat.id === chatId);
-    return chat?.messages ?? [];
+    const messages = chat?.messages ?? [];
+    for (const message of messages) {
+      message.read = true;
+    }
+    if (chat) {
+      this.updateChat({...chat, messages});
+    }
+
+    return messages;
   }
 
-  updateChat(chatData: ChatInterface): void {
+  getNumberOfUnreadMessages(chat: ChatInterface): number {
+    let totalUnReadMessages = 0;
+
+    if (chat?.messages) {
+      for (let i = chat.messages.length - 1; i >= 0; i--) {
+        if (chat.messages[i].read) {
+          break;
+        }
+        totalUnReadMessages += 1;
+      }
+    }
+
+    return totalUnReadMessages;
+  }
+
+  updateChat(chatData: ChatInterface, bringToFirst: boolean = false): void {
     for (let i = 0; i < this.chats.length; i++) {
       const chat = this.chats[i];
       if (chat.id === chatData.id) {
         this.chats[i] = Object.assign(chat, chatData);
+        if (bringToFirst && this.chats.length > 1) {
+          const temp = this.chats[i];
+          this.chats[i] = this.chats[0];
+          this.chats[0] = temp;
+        }
+        break;
       }
     }
     this.saveChats(this.chats);
@@ -68,8 +110,8 @@ export class ChatService {
     // tslint:disable-next-line:no-shadowed-variable
     const chat = this.chats.find((chat) => chat.id === chatId);
     if (chat) {
-      chat.messages.push({message, type: MessageTypeEnum.SENT});
-      this.updateChat(chat);
+      chat.messages.push({message, type: MessageTypeEnum.SENT, read: true});
+      this.updateChat(chat, true);
     }
   }
 
@@ -129,8 +171,8 @@ export class ChatService {
     const {chatId} = payload;
     const plaintext = await this.decryptMessage(payload);
     const chat = await this.getChat(chatId);
-    chat.messages.push({type: MessageTypeEnum.RECEIVED, message: plaintext});
-    this.updateChat(chat);
+    chat.messages.push({type: MessageTypeEnum.RECEIVED, message: plaintext, read: false});
+    this.updateChat(chat, true);
   }
 
   saveNotReadMessages(messages: { chatId: string, ciphertext: string; }[]): void {
@@ -142,8 +184,8 @@ export class ChatService {
         continue;
       }
 
-      chat.messages.push({message: message.ciphertext, type: MessageTypeEnum.RECEIVED});
-      this.updateChat(chat);
+      chat.messages.push({message: message.ciphertext, type: MessageTypeEnum.RECEIVED, read: false});
+      this.updateChat(chat, true);
     }
   }
 

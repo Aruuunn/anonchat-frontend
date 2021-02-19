@@ -22,10 +22,12 @@ export class ShareInvitationComponent implements OnInit {
 
   ngOnInit(): void {
     if ('share' in navigator) {
-      void navigator.share({
-        title: 'Invitation Link',
-        text: 'Share this invitation link',
+      navigator.share({
+        title: 'AnonChat - Invitation Link',
+        text: 'Share this invitation link 🔗',
         url: this.invitationLink
+      }).then(() => {
+        this.isInvitationShareModalOpen?.next(false);
       });
     }
   }

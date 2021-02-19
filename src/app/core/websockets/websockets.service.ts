@@ -16,6 +16,7 @@ export class WebsocketsService {
 
   public connectToWs(url: string): SocketIOClient.Socket {
     const accessToken = this.authService.accessToken ?? undefined;
+    console.log({accessToken});
     const socket = io.connect(url, {
       query: {
         accessToken
@@ -34,8 +35,9 @@ export class WebsocketsService {
     });
 
     socket.on(Events.EXCEPTION, (data: { code: number, message: string }) => {
+      console.error(data);
       if (data?.code === 401) {
-        void this.router.navigateByUrl('/auth/login');
+        void this.router.navigateByUrl('/welcome');
       }
     });
     return socket;
@@ -50,6 +52,7 @@ export class WebsocketsService {
     if (typeof this.ws === 'undefined') {
       throw new Error('Connect to websocket server before attempting to send data.');
     }
+    console.log('Emitting...', event);
     this.ws.emit(event, {...payload}, ack);
   }
 

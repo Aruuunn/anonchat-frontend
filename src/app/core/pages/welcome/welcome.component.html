@@ -1,9 +1,7 @@
 <app-simple-navbar></app-simple-navbar>
-
-
-<div style="height: calc( 100vh - 200px );" class="container flex justify-around items-center mx-auto p-3 mt-10">
+<div style="height: calc( 100vh - 200px );" class="container flex justify-around items-center mx-auto p-3 mt-10 md:mt-6">
   <img src="assets/chatting.svg" style="max-width: 700px" class="h-auto hidden xl:inline-block image" alt="">
-  <form class="flex flex-col text-white poppins" #form="ngForm" (ngSubmit)="submitHandler(form)">
+  <form style="max-width: 420px" class="flex flex-col text-white poppins w-full p-3" #form="ngForm" (ngSubmit)="submitHandler(form)">
     <p *ngIf="this.error!==null" class="text-red-500 p-3 border mb-4 border-red-500 rounded flex items-center">
       <svg xmlns="http://www.w3.org/2000/svg" style="height: 30px;width: auto" class="mr-2"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -13,12 +11,12 @@
     <label class="text-3xl mb-5 text-gray-lighter font-bold" for="fullName">What's your Name ?</label>
     <p class="text-gray mb-3 text-sm">Provide your publicly visible name</p>
     <input type="text" placeholder="Eg.  Luke Skywalker" name="fullName" id="fullName" ngModel pattern="^[a-zA-Z ?]+"
-           class="rounded text-field" required/>
+           class="rounded text-field w-full" required/>
     <p class="text-red-400"
        *ngIf="!form.controls.fullName?.valid && form.controls.fullName?.touched">
       *{{form.controls.fullName?.getError('required') ? "Name is required. " : null }}
       {{form.controls.fullName?.getError('pattern') ? "Name should only contain alphabets. " : null }}
     </p>
-    <button type="submit" class="btn btn-green mt-4">Continue</button>
+    <button type="submit" class="btn btn-green mt-4 w-full">Continue</button>
   </form>
 </div>

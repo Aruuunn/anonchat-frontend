@@ -7,6 +7,7 @@ import {Router} from '@angular/router';
 import {AuthService} from '../../auth/auth.service';
 import {ActivatedRoute} from '@angular/router';
 import {convertAllArrayBufferToString} from '../../../../../projects/signal/src/lib/utils/array-buffer.utils';
+import {ChatService} from '../../chat/chat.service';
 
 @Component({
   selector: 'app-welcome',
@@ -20,7 +21,8 @@ export class WelcomeComponent {
     private userService: UserService,
     private authService: AuthService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private chatService: ChatService
   ) {
   }
 
@@ -29,10 +31,11 @@ export class WelcomeComponent {
 
 
   async submitHandler(form: NgForm): Promise<void> {
+    this.chatService.clearChats();
+
     const fullName = form.controls.fullName.value?.trim();
     console.assert(typeof fullName !== 'undefined' && fullName !== null, 'FullName has to be defined');
     const bundle = await this.signalService.register();
-    console.log({bundle: convertAllArrayBufferToString(bundle)});
     this.loading = true;
     this.httpService.post('/auth/register', {
       bundle: convertAllArrayBufferToString(bundle),
