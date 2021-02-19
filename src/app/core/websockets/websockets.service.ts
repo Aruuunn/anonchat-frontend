@@ -37,7 +37,7 @@ export class WebsocketsService {
     socket.on(Events.EXCEPTION, (data: { code: number, message: string }) => {
       console.error(data);
       if (data?.code === 401) {
-        void this.router.navigateByUrl('/auth/login');
+        void this.router.navigateByUrl('/welcome');
       }
     });
     return socket;

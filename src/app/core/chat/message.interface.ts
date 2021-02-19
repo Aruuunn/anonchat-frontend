@@ -7,4 +7,5 @@ export enum MessageType {
 export interface MessageInterface {
   type: MessageType;
   message: string;
+  read: boolean;
 }
