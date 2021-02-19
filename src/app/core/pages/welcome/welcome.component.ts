@@ -31,26 +31,29 @@ export class WelcomeComponent {
 
 
   async submitHandler(form: NgForm): Promise<void> {
-    this.chatService.clearChats();
 
-    const fullName = form.controls.fullName.value?.trim();
-    console.assert(typeof fullName !== 'undefined' && fullName !== null, 'FullName has to be defined');
-    const bundle = await this.signalService.register();
     this.loading = true;
-    this.httpService.post('/auth/register', {
-      bundle: convertAllArrayBufferToString(bundle),
-      fullName
-    }).subscribe((payload: { invitationId: string, id: string }) => {
-        const {id, invitationId} = payload;
-        this.loading = false;
-        this.userService.setUser({id, fullName, invitationId});
-        this.authService.isLoggedIn = true;
-        const nextURL = this.activatedRoute.snapshot.queryParamMap.get('next');
-        this.router.navigateByUrl(nextURL ?? '/');
-      }
-      , ({error}) => {
-        this.loading = false;
-        this.error = error.message;
-      });
+    setTimeout(async () => {
+      this.chatService.clearChats();
+      const fullName = form.controls.fullName.value?.trim();
+      console.assert(typeof fullName !== 'undefined' && fullName !== null, 'FullName has to be defined');
+      const bundle = await this.signalService.register();
+
+      this.httpService.post('/auth/register', {
+        bundle: convertAllArrayBufferToString(bundle),
+        fullName
+      }).subscribe((payload: { invitationId: string, id: string }) => {
+          const {id, invitationId} = payload;
+          this.loading = false;
+          this.userService.setUser({id, fullName, invitationId});
+          this.authService.isLoggedIn = true;
+          const nextURL = this.activatedRoute.snapshot.queryParamMap.get('next');
+          this.router.navigateByUrl(nextURL ?? '/');
+        }
+        , ({error}) => {
+          this.loading = false;
+          this.error = error.message?.trim() || 'Something went wrong. Try again later';
+        });
+    }, 0);
   }
 }

@@ -12,7 +12,7 @@ export class ShareInvitationComponent implements OnInit {
   constructor(private userService: UserService) {
   }
 
-  @Input('isInvitationShareModalOpen') isInvitationShareModalOpen: undefined | BehaviorSubject<boolean>;
+  @Input() isInvitationShareModalOpen: undefined | BehaviorSubject<boolean>;
 
   @ViewChild('infoText') infoTextEl: ElementRef | undefined;
 
@@ -34,6 +34,7 @@ export class ShareInvitationComponent implements OnInit {
 
   copyLink(): void {
     void navigator.clipboard.writeText(this.invitationLink);
+
     if (typeof this.infoTextEl !== 'undefined') {
       this.infoTextEl.nativeElement.innerText = 'Link Copied to Clipboard!';
     }

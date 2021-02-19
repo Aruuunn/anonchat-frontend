@@ -17,8 +17,9 @@
   </div>
 
   <div class="flex-col items-center p-3">
-    <div tabindex="0" role="button" *ngFor="let chat of chatService.fetchAllChats()"
+    <div tabindex="0" *ngFor="let chat of chatService.fetchAllChats()"
          (click)="currentChatId.next(chat.id)"
+         (keypress)="($event.key === 'Enter' || $event.key === ' ') && currentChatId.next(chat.id)"
          [ngClass]="{ 'bg-green': chat.id === currentChatId.getValue() }"
          class="w-full mt-2 rounded-lg p-5 bg-black-5 focus:ring outline-none ring-green-400 text-white h-28">
       <h3 class="font-bold">{{chat.name ? chat.name : "Anonymous" }}</h3>
