@@ -6,6 +6,7 @@ import {SignalService} from '../../../../projects/signal/src/lib/signal.service'
 import {WebsocketsService} from '../websockets/websockets.service';
 import {Events} from '../websockets/events.enum';
 import {convertAllBufferStringToArrayBuffer} from '../../../../projects/signal/src/lib/utils/array-buffer.utils';
+import {  } from 'unique-names-generator'
 
 
 // @TODO provide storage backend through DI
@@ -194,5 +195,9 @@ export class ChatService {
 
   fetchAllChats(): ChatInterface[] {
     return this.chats;
+  }
+
+  isChatsEmpty(): boolean {
+    return this.chats.length === 0;
   }
 }

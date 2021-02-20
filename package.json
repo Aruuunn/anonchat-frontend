@@ -33,6 +33,7 @@
     "socket.io-client": "2.3.0",
     "tailwindcss": "^2.0.2",
     "tslib": "^2.0.0",
+    "unique-names-generator": "^4.4.0",
     "url-join": "^4.0.1",
     "zone.js": "~0.10.2"
   },

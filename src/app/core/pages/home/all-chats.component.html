@@ -16,7 +16,8 @@
       </div>
       <div class="text-black-4 ml-3 lg:hidden">
         <button style="padding: 12px" (click)="onLogout.bind(this)()">
-          <svg style="height: 24px;width: auto"  xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24" viewBox="0 0 24 24"
+          <svg style="height: 24px;width: auto" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24"
+               height="24" viewBox="0 0 24 24"
                width="24">
             <g>
               <path d="M0,0h24v24H0V0z" fill="none"/>
@@ -34,7 +35,6 @@
         </button>
       </div>
     </div>
-
   </div>
 
   <div class="flex-col items-center p-3">
@@ -43,9 +43,10 @@
          (keypress)="($event.key === 'Enter' || $event.key === ' ') && currentChatId.next(chat.id)"
          [ngClass]="{ 'bg-green': chat.id === currentChatId.getValue() }"
          class="w-full mt-2 rounded-lg p-5 bg-black-5 focus:ring outline-none ring-green-400 text-white h-28">
-      <h3 class="font-bold">{{chat.name ? chat.name : "Anonymous" }}</h3>
+      <h3 class="font-bold flex items-center">
+        {{chat.name ? chat.name : "Anonymous " }}</h3>
       <div class="flex justify-between mt-3 items-center">
-        <p class="h-full">
+        <p style="height: 18px" class="overflow-hidden overflow-ellipsis">
           {{chat.messages.length !== 0 ? (chat.messages[chat.messages.length - 1]).message : ''}}
         </p>
         <span
