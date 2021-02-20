@@ -6,17 +6,21 @@ import urlJoin from 'url-join';
 import {HttpClient} from '@angular/common/http';
 import {HttpOptions} from './http-options.interface';
 import {API_BASE_URL} from '../../../config/api.config';
+import {Router} from '@angular/router';
 
 
 @Injectable({
   providedIn: 'root',
 })
 export class HttpService {
-  constructor(private authService: AuthService, private http: HttpClient) {
+  constructor(
+    private authService: AuthService,
+    private http: HttpClient,
+    private router: Router,
+  ) {
   }
 
   private mapData = map((body: any) => {
-    this.authService.updateAccessToken(body?.accessToken);
     return ({
       ...body.data
     });
@@ -35,12 +39,25 @@ export class HttpService {
     });
   }
 
+  async refreshAccessToken(): Promise<void> {
+    try {
+      const {accessToken} = await this.http.get(
+        this.combineUrl('/auth/access-token/refresh'),
+        this.mergeHttpOptionsWithCommonOptions({}),
+      )
+        .pipe(this.mapData).toPromise();
+
+      this.authService.accessToken = accessToken;
+    } catch (e) {
+      await this.router.navigateByUrl('/welcome');
+    }
+  }
+
 
   get(
     url: string,
     options?: HttpOptions
   ): Observable<any> {
-
     return this.http.get(
       this.combineUrl(url),
       this.mergeHttpOptionsWithCommonOptions(options))
