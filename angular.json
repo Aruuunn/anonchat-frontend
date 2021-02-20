@@ -33,7 +33,7 @@
             "styles": [
               "generated/global.scss"
             ],
-            "scripts": []
+            "scripts": [],
           },
           "configurations": {
             "production": {
@@ -105,7 +105,7 @@
             "tsConfig": [
               "tsconfig.app.json",
               "tsconfig.spec.json",
-              "e2e/tsconfig.json"
+              "e2e/tsconfig.json",
             ],
             "exclude": [
               "**/node_modules/**"
