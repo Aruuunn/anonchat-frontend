@@ -6,9 +6,7 @@ import {WebsocketsService} from '../../websockets/websockets.service';
 import {WEBSOCKET_URI} from '../../../../config/api.config';
 import {Events} from '../../websockets/events.enum';
 import {ChatService} from '../../chat/chat.service';
-import {arrayBufferToString} from '@privacyresearch/libsignal-protocol-typescript/lib/helpers';
 import {MessageType} from '@privacyresearch/libsignal-protocol-typescript';
-import Socket = SocketIOClient.Socket;
 
 
 @Component({
@@ -27,6 +25,12 @@ export class HomeComponent implements OnInit {
 
   currentChatId = new BehaviorSubject<null | string>(null);
   isInvitationShareModalOpen = new BehaviorSubject<boolean>(false);
+
+  onLogout(): void {
+    localStorage.clear();
+    sessionStorage.clear();
+    void this.router.navigateByUrl('/welcome');
+  }
 
 
   ngOnInit(): void {
@@ -60,7 +64,6 @@ export class HomeComponent implements OnInit {
                   });
               });
             });
-
           });
         });
       }

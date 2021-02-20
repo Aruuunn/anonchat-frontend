@@ -15,7 +15,10 @@ import {convertAllBufferStringToArrayBuffer} from '../../../../projects/signal/s
   providedIn: 'root'
 })
 export class ChatService {
-  constructor(private signalService: SignalService, private websocketService: WebsocketsService) {
+  constructor(
+    private signalService: SignalService,
+    private websocketService: WebsocketsService,
+  ) {
   }
 
   private textEncoder: TextEncoder = new TextEncoder();

@@ -8,6 +8,7 @@ import {AuthService} from '../../auth/auth.service';
 import {ActivatedRoute} from '@angular/router';
 import {convertAllArrayBufferToString} from '../../../../../projects/signal/src/lib/utils/array-buffer.utils';
 import {ChatService} from '../../chat/chat.service';
+import {LoadingStateService} from '../../services/loading-state.service';
 
 @Component({
   selector: 'app-welcome',
@@ -22,17 +23,17 @@ export class WelcomeComponent {
     private authService: AuthService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private chatService: ChatService
+    private chatService: ChatService,
+    public loadingStateService: LoadingStateService
   ) {
   }
 
-  loading = false;
   error: null | string = null;
-
 
   async submitHandler(form: NgForm): Promise<void> {
 
-    this.loading = true;
+    this.loadingStateService.isLoading = true;
+
     setTimeout(async () => {
       this.chatService.clearChats();
       const fullName = form.controls.fullName.value?.trim();
@@ -44,14 +45,15 @@ export class WelcomeComponent {
         fullName
       }).subscribe((payload: { invitationId: string, id: string }) => {
           const {id, invitationId} = payload;
-          this.loading = false;
+          this.loadingStateService.isLoading = false;
+
           this.userService.setUser({id, fullName, invitationId});
           this.authService.isLoggedIn = true;
           const nextURL = this.activatedRoute.snapshot.queryParamMap.get('next');
           this.router.navigateByUrl(nextURL ?? '/');
-        }
-        , ({error}) => {
-          this.loading = false;
+        },
+        ({error}) => {
+          this.loadingStateService.isLoading = false;
           this.error = error.message?.trim() || 'Something went wrong. Try again later';
         });
     }, 0);

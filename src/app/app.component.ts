@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {Router, NavigationStart, NavigationEnd, NavigationError, NavigationCancel, Event} from '@angular/router';
-import {BehaviorSubject} from 'rxjs';
+import {LoadingStateService} from './core/services/loading-state.service';
 
 
 @Component({
@@ -9,9 +9,11 @@ import {BehaviorSubject} from 'rxjs';
   styleUrls: ['../styles/palette.scss']
 })
 export class AppComponent {
-  loading = new BehaviorSubject<boolean>(true);
-
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    public loadingStateService: LoadingStateService
+  ) {
+    this.loadingStateService.isLoading = true;
     router.events.subscribe((e) => {
       this.checkRouterEvent(e);
     });
@@ -19,13 +21,13 @@ export class AppComponent {
 
   checkRouterEvent(routerEvent: Event): void {
     if (routerEvent instanceof NavigationStart) {
-      this.loading.next(true);
+      this.loadingStateService.isLoading = true;
     }
 
     if (routerEvent instanceof NavigationEnd ||
       routerEvent instanceof NavigationCancel ||
       routerEvent instanceof NavigationError) {
-      this.loading.next(false);
+      this.loadingStateService.isLoading = false;
     }
   }
 }

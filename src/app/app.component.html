@@ -1,5 +1,5 @@
 <div class="bg-black-3 min-h-screen">
-  <div *ngIf="loading.getValue()">
+  <div *ngIf="loadingStateService.isLoading">
     <div class="h-screen bg-black fixed opacity-25 w-screen">
     </div>
     <div class="h-screen w-screen fixed flex justify-center items-center">

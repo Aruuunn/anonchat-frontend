@@ -14,15 +14,15 @@
     </p>
     <label class="text-3xl mb-5 text-gray-lighter font-bold" for="fullName">What's your Name ?</label>
     <p class="text-gray mb-3 text-sm">Provide your publicly visible name</p>
-    <input [disabled]="loading" type="text" placeholder="Eg.  Luke Skywalker" name="fullName" id="fullName" ngModel
+    <input [disabled]="loadingStateService.isLoading " type="text" placeholder="Eg.  Luke Skywalker" name="fullName" id="fullName" ngModel
            pattern="^[a-zA-Z ?]+"
            class="rounded text-field w-full" required/>
     <p class="text-red-400"
-       *ngIf="!form.controls.fullName?.valid && form.controls.fullName?.touched && !loading">
+       *ngIf="!form.controls.fullName?.valid && form.controls.fullName?.touched && !loadingStateService.isLoading ">
       *{{form.controls.fullName?.getError('required') ? "Name is required. " : null }}
       {{form.controls.fullName?.getError('pattern') ? "Name should only contain alphabets. " : null }}
     </p>
-    <button [disabled]="loading || !form.valid" type="submit"
-            class="btn btn-green mt-4 w-full">{{ loading ? "loading.." : "Continue" }}</button>
+    <button [disabled]="loadingStateService.isLoading || !form.valid" type="submit"
+            class="btn btn-green mt-4 w-full">Continue</button>
   </form>
 </div>

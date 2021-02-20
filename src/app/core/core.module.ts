@@ -14,6 +14,7 @@ import {HttpService} from './http/http.service';
 import {InvitationDetailsResolver} from './resolvers/invitation-details.resolver';
 import {ChatService} from './chat/chat.service';
 import {AuthGuard} from './auth/auth.guard';
+import {LoadingStateService} from './services/loading-state.service';
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import {AuthGuard} from './auth/auth.guard';
     HttpService,
     InvitationDetailsResolver,
     ChatService,
-    AuthGuard
+    AuthGuard,
+    LoadingStateService
   ],
   exports: [
     HomeComponent,
