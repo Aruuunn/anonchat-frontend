@@ -1,11 +1,13 @@
 import {Injectable} from '@angular/core';
-import {DeviceType, SessionCipher, MessageType} from '@privacyresearch/libsignal-protocol-typescript';
+import {DeviceType, MessageType, SessionCipher} from '@privacyresearch/libsignal-protocol-typescript';
 import {ChatInterface} from './chat.interface';
 import {MessageInterface, MessageType as MessageTypeEnum} from './message.interface';
 import {SignalService} from '../../../../projects/signal/src/lib/signal.service';
 import {WebsocketsService} from '../websockets/websockets.service';
 import {Events} from '../websockets/events.enum';
 import {convertAllBufferStringToArrayBuffer} from '../../../../projects/signal/src/lib/utils/array-buffer.utils';
+import {ChatType} from './chat-type.enum';
+import {colors, uniqueNamesGenerator, animals} from 'unique-names-generator';
 
 
 // @TODO provide storage backend through DI
@@ -15,7 +17,10 @@ import {convertAllBufferStringToArrayBuffer} from '../../../../projects/signal/s
   providedIn: 'root'
 })
 export class ChatService {
-  constructor(private signalService: SignalService, private websocketService: WebsocketsService) {
+  constructor(
+    private signalService: SignalService,
+    private websocketService: WebsocketsService,
+  ) {
   }
 
   private textEncoder: TextEncoder = new TextEncoder();
@@ -36,8 +41,8 @@ export class ChatService {
     localStorage.setItem('chats', JSON.stringify(chats));
   }
 
-  newChat(chatId: string, recipientId: string, bundle?: DeviceType<string>, name?: string): void {
-    this.chats.unshift({id: chatId, bundle, messages: [], name, recipientId});
+  newChat(chatId: string, recipientId: string, type: ChatType, bundle?: DeviceType<string>, name?: string): void {
+    this.chats.unshift({id: chatId, bundle, messages: [], name, recipientId, type});
     this.saveChats(this.chats);
   }
 
@@ -103,7 +108,7 @@ export class ChatService {
     if (!chat) {
       return null;
     }
-    return chat.name ?? 'Anonymous';
+    return chat.name ?? 'Unknown';
   }
 
   newMessageSentByLocalUser(chatId: string, message: string): void {
@@ -119,7 +124,12 @@ export class ChatService {
     return this.chats.find((chat) => chat.id === chatId) ?? await new Promise((res, rej) => {
       // tslint:disable-next-line:no-shadowed-variable
       this.websocketService.emit(Events.FETCH_RECIPIENT_ID, {chatId}, ({recipientId}: { recipientId: string }) => {
-        this.newChat(chatId, recipientId);
+        this.newChat(chatId, recipientId, ChatType.KNOWN, undefined, uniqueNamesGenerator({
+          style: 'capital',
+          separator: ' ',
+          dictionaries: [colors, animals],
+          length: 2
+        }));
         res(this.chats[0]);
       });
     });
@@ -189,7 +199,11 @@ export class ChatService {
     }
   }
 
-  fetchAllChats(): ChatInterface[] {
-    return this.chats;
+  fetchAllChats(type?: string): ChatInterface[] {
+    return this.chats.filter(chat => typeof type === 'undefined' || chat.type === type);
+  }
+
+  isChatsEmpty(): boolean {
+    return this.chats.length === 0;
   }
 }

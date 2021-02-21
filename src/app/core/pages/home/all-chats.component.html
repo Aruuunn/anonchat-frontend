@@ -4,27 +4,49 @@
       <h1 class="text-gray-400 font-bold flex">
         <img src="assets/logo.svg" alt="logo" class="mr-2"/> AnonChat</h1>
     </div>
-    <div class="text-black-4 lg:hidden">
-      <button style="padding: 12px" (click)="isInvitationShareModalOpen.next(true)">
-        <svg style="height: 24px;width: auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-             stroke="#8E9297">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
-        </svg>
-      </button>
-
+    <div class="flex">
+      <div class="text-black-4 lg:hidden">
+        <button style="padding: 12px" (click)="isInvitationShareModalOpen.next(true)">
+          <svg style="height: 24px;width: auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+               stroke="#8E9297">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+          </svg>
+        </button>
+      </div>
+      <div class="text-black-4 ml-3 lg:hidden">
+        <button style="padding: 12px" (click)="onLogout.bind(this)()">
+          <svg style="height: 24px;width: auto" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24"
+               height="24" viewBox="0 0 24 24"
+               width="24">
+            <g>
+              <path d="M0,0h24v24H0V0z" fill="none"/>
+            </g>
+            <g>
+              <g>
+                <path fill="#8E9297"
+                      d="M5,5h6c0.55,0,1-0.45,1-1v0c0-0.55-0.45-1-1-1H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h6c0.55,0,1-0.45,1-1v0 c0-0.55-0.45-1-1-1H5V5z"/>
+                <path
+                  fill="#8E9297"
+                  d="M20.65,11.65l-2.79-2.79C17.54,8.54,17,8.76,17,9.21V11h-7c-0.55,0-1,0.45-1,1v0c0,0.55,0.45,1,1,1h7v1.79 c0,0.45,0.54,0.67,0.85,0.35l2.79-2.79C20.84,12.16,20.84,11.84,20.65,11.65z"/>
+              </g>
+            </g>
+          </svg>
+        </button>
+      </div>
     </div>
   </div>
 
   <div class="flex-col items-center p-3">
-    <div tabindex="0" *ngFor="let chat of chatService.fetchAllChats()"
+    <div tabindex="0" *ngFor="let chat of chatService.fetchAllChats(chatType)"
          (click)="currentChatId.next(chat.id)"
          (keypress)="($event.key === 'Enter' || $event.key === ' ') && currentChatId.next(chat.id)"
          [ngClass]="{ 'bg-green': chat.id === currentChatId.getValue() }"
          class="w-full mt-2 rounded-lg p-5 bg-black-5 focus:ring outline-none ring-green-400 text-white h-28">
-      <h3 class="font-bold">{{chat.name ? chat.name : "Anonymous" }}</h3>
+      <h3 class="font-bold flex items-center">
+        {{chat.name ? chat.name : "Anonymous " }}</h3>
       <div class="flex justify-between mt-3 items-center">
-        <p class="h-full">
+        <p style="height: 24px" class="overflow-hidden overflow-ellipsis">
           {{chat.messages.length !== 0 ? (chat.messages[chat.messages.length - 1]).message : ''}}
         </p>
         <span
