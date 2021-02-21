@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private websocketService: WebsocketsService,
-    private chatService: ChatService,
+    public chatService: ChatService,
   ) {
   }
 

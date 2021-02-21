@@ -137,7 +137,6 @@ export class ChatService {
 
   private async getSessionCipher(chat: ChatInterface): Promise<SessionCipher> {
     // tslint:disable-next-line:no-non-null-assertion
-    console.log('bundle ', convertAllBufferStringToArrayBuffer(chat.bundle!));
     if (chat.messages.length === 0 && chat.bundle) {
       await this.signalService.establishSession(
         convertAllBufferStringToArrayBuffer(chat.bundle) as DeviceType,
@@ -145,7 +144,6 @@ export class ChatService {
         1
       );
     }
-    console.log('recipientId', chat.recipientId);
     const sessionCipher = this.sessionCiphers[chat.id] ?? await this.signalService.getSessionCipher(chat.recipientId, 1);
     if (!this.sessionCiphers[chat.id]) {
       this.sessionCiphers[chat.id] = sessionCipher;
@@ -201,6 +199,16 @@ export class ChatService {
 
   fetchAllChats(type?: string): ChatInterface[] {
     return this.chats.filter(chat => typeof type === 'undefined' || chat.type === type);
+  }
+
+  hasUnreadMessage(type?: string): boolean {
+    const chats = this.fetchAllChats(type);
+    for (const chat of chats) {
+      if (chat.messages.length > 0 && !chat.messages[chat.messages.length - 1].read) {
+        return true;
+      }
+    }
+    return false;
   }
 
   isChatsEmpty(): boolean {
