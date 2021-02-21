@@ -3,6 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {HttpService} from '../../http/http.service';
 import {ChatService} from '../../chat/chat.service';
 import {LoadingStateService} from '../../services/loading-state.service';
+import {ChatType} from '../../chat/chat-type.enum';
 
 
 // @TODO make sure the same person cannot accept the invitation more than once in frontend and backend
@@ -43,7 +44,7 @@ export class AcceptInvitationComponent implements OnInit {
       console.assert(typeof recipientId !== 'undefined', 'recipientId has to be defined');
       console.assert(typeof bundle !== 'undefined', 'Bundle has to be defined');
 
-      this.chatService.newChat(chatId, recipientId, bundle, this.fullName);
+      this.chatService.newChat(chatId, recipientId, ChatType.ANONYMOUS, bundle, this.fullName);
       this.loadingStateService.isLoading = false;
       void this.router.navigateByUrl('/');
     }, ({error}) => {

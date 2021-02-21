@@ -38,7 +38,7 @@
   </div>
 
   <div class="flex-col items-center p-3">
-    <div tabindex="0" *ngFor="let chat of chatService.fetchAllChats()"
+    <div tabindex="0" *ngFor="let chat of chatService.fetchAllChats(chatType)"
          (click)="currentChatId.next(chat.id)"
          (keypress)="($event.key === 'Enter' || $event.key === ' ') && currentChatId.next(chat.id)"
          [ngClass]="{ 'bg-green': chat.id === currentChatId.getValue() }"
@@ -46,7 +46,7 @@
       <h3 class="font-bold flex items-center">
         {{chat.name ? chat.name : "Anonymous " }}</h3>
       <div class="flex justify-between mt-3 items-center">
-        <p style="height: 18px" class="overflow-hidden overflow-ellipsis">
+        <p style="height: 24px" class="overflow-hidden overflow-ellipsis">
           {{chat.messages.length !== 0 ? (chat.messages[chat.messages.length - 1]).message : ''}}
         </p>
         <span

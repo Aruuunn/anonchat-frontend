@@ -43,12 +43,13 @@ export class WelcomeComponent {
       this.httpService.post('/auth/register', {
         bundle: convertAllArrayBufferToString(bundle),
         fullName
-      }).subscribe((payload: { invitationId: string, id: string }) => {
-          const {id, invitationId} = payload;
+      }).subscribe((payload: { invitationId: string, id: string, accessToken: string }) => {
+          const {id, invitationId, accessToken} = payload;
           this.loadingStateService.isLoading = false;
 
           this.userService.setUser({id, fullName, invitationId});
           this.authService.isLoggedIn = true;
+          this.authService.accessToken = accessToken;
           const nextURL = this.activatedRoute.snapshot.queryParamMap.get('next');
           this.router.navigateByUrl(nextURL ?? '/');
         },
