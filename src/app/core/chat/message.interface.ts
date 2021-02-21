@@ -5,7 +5,9 @@ export enum MessageType {
 
 
 export interface MessageInterface {
-  type: MessageType;
-  message: string;
+  id: string;
+  messageText: string;
   read: boolean;
+  type: MessageType;
+  sent?: boolean;
 }

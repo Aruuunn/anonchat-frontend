@@ -38,12 +38,30 @@ export class ChatService {
 
   saveChats(chats: ChatInterface[]): void {
     this.chats = [...chats];
-    localStorage.setItem('chats', JSON.stringify(chats));
+    const chatsClone: ChatInterface[] = [];
+    for (const chat of chats) {
+      const chatClone = Object.assign({}, chat);
+      const messages = [...chatClone.messages];
+      for (let i = 0; i < messages.length; i++) {
+        if (!messages[i].sent) {
+          messages.splice(i, 1);
+          i--;
+        }
+      }
+      chatClone.messages = messages;
+      chatsClone.push(chatClone);
+    }
+    localStorage.setItem('chats', JSON.stringify(chatsClone));
   }
 
-  newChat(chatId: string, recipientId: string, type: ChatType, bundle?: DeviceType<string>, name?: string): void {
-    this.chats.unshift({id: chatId, bundle, messages: [], name, recipientId, type});
+  // @TODO refactor to accept a single object
+  newChat(
+    chatId: string,
+    recipientId: string,
+    type: ChatType, bundle?: DeviceType<string>, name?: string, sessionEstablished: boolean = false): ChatInterface {
+    this.chats.unshift({id: chatId, bundle, messages: [], name, recipientId, type, sessionEstablished});
     this.saveChats(this.chats);
+    return this.chats[0];
   }
 
   getRecentMessage(chatId: string): MessageInterface | null {
@@ -111,12 +129,34 @@ export class ChatService {
     return chat.name ?? 'Unknown';
   }
 
-  newMessageSentByLocalUser(chatId: string, message: string): void {
+  newMessageSentByLocalUser(chatId: string, messageText: string): string | null {
     // tslint:disable-next-line:no-shadowed-variable
     const chat = this.chats.find((chat) => chat.id === chatId);
     if (chat) {
-      chat.messages.push({message, type: MessageTypeEnum.SENT, read: true});
+      const messageId = `${Date.now()}${Math.ceil(Math.random() * 10000)}`; // temporary Id
+      const message = {
+        messageText,
+        type: MessageTypeEnum.SENT,
+        read: true,
+        sent: false,
+        id: messageId
+      };
+      chat.messages.push(message);
       this.updateChat(chat, true);
+      return messageId;
+    }
+    return null;
+  }
+
+  messageSuccessfullySentByLocalUser(chatId: string, temporaryMessageId: string, messageId: string): void {
+    // tslint:disable-next-line:no-shadowed-variable
+    const chat = this.chats.find((chat) => chat.id === chatId);
+    if (chat) {
+      const message = chat.messages.find(m => m.id === temporaryMessageId);
+      if (message) {
+        message.sent = true;
+        message.id = messageId;
+      }
     }
   }
 
@@ -124,28 +164,28 @@ export class ChatService {
     return this.chats.find((chat) => chat.id === chatId) ?? await new Promise((res, rej) => {
       // tslint:disable-next-line:no-shadowed-variable
       this.websocketService.emit(Events.FETCH_RECIPIENT_ID, {chatId}, ({recipientId}: { recipientId: string }) => {
-        this.newChat(chatId, recipientId, ChatType.KNOWN, undefined, uniqueNamesGenerator({
+        const chat = this.newChat(chatId, recipientId, ChatType.KNOWN, undefined, uniqueNamesGenerator({
           style: 'capital',
           separator: ' ',
           dictionaries: [colors, animals],
           length: 2
-        }));
-        res(this.chats[0]);
+        }), true);
+        res(chat);
       });
     });
   }
 
   private async getSessionCipher(chat: ChatInterface): Promise<SessionCipher> {
     // tslint:disable-next-line:no-non-null-assertion
-    console.log('bundle ', convertAllBufferStringToArrayBuffer(chat.bundle!));
-    if (chat.messages.length === 0 && chat.bundle) {
+    if (!chat.sessionEstablished && chat.type === 'ANONYMOUS') {
+      console.log('establishing session');
       await this.signalService.establishSession(
         convertAllBufferStringToArrayBuffer(chat.bundle) as DeviceType,
         chat.recipientId,
         1
       );
+      chat.sessionEstablished = true;
     }
-    console.log('recipientId', chat.recipientId);
     const sessionCipher = this.sessionCiphers[chat.id] ?? await this.signalService.getSessionCipher(chat.recipientId, 1);
     if (!this.sessionCiphers[chat.id]) {
       this.sessionCiphers[chat.id] = sessionCipher;
@@ -169,38 +209,37 @@ export class ChatService {
     return this.textDecoder.decode(buffer);
   }
 
-  async sendMessage(chatId: string, plaintext: string): Promise<void> {
+  async sendMessage(chatId: string, plaintext: string): Promise<string> {
     const message: MessageType = await this.encryptMessage({chatId, plaintext});
-    this.websocketService.emit(Events.SEND_MESSAGE, {chatId, message}, (messageId) => {
-      console.log('Message Sent.... ' + messageId);
+    return new Promise<string>((res, _) => {
+      this.websocketService.emit(Events.SEND_MESSAGE, {chatId, message}, (messageId) => {
+        console.log('Message Sent.... ' + messageId);
+        res(messageId);
+      });
     });
   }
 
 
-  async newReceivedMessage(payload: { chatId: string, message: MessageType }): Promise<void> {
-    const {chatId} = payload;
+  async newReceivedMessage(payload: { chatId: string, message: MessageType & { messageId: string } }): Promise<void> {
+    const {chatId, message: {messageId}} = payload;
     const plaintext = await this.decryptMessage(payload);
     const chat = await this.getChat(chatId);
-    chat.messages.push({type: MessageTypeEnum.RECEIVED, message: plaintext, read: false});
+    chat.messages.push({type: MessageTypeEnum.RECEIVED, messageText: plaintext, read: false, id: messageId});
     this.updateChat(chat, true);
-  }
-
-  saveNotReadMessages(messages: { chatId: string, ciphertext: string; }[]): void {
-    for (const message of messages) {
-      // tslint:disable-next-line:no-shadowed-variable
-      const chat = this.chats.find((chat) => chat.id === message.chatId);
-      if (!chat) {
-        console.error(`Chat with chat Id - ${message.chatId} not found`);
-        continue;
-      }
-
-      chat.messages.push({message: message.ciphertext, type: MessageTypeEnum.RECEIVED, read: false});
-      this.updateChat(chat, true);
-    }
   }
 
   fetchAllChats(type?: string): ChatInterface[] {
     return this.chats.filter(chat => typeof type === 'undefined' || chat.type === type);
+  }
+
+  hasUnreadMessage(type?: string): boolean {
+    const chats = this.fetchAllChats(type);
+    for (const chat of chats) {
+      if (chat.messages.length > 0 && !chat.messages[chat.messages.length - 1].read) {
+        return true;
+      }
+    }
+    return false;
   }
 
   isChatsEmpty(): boolean {

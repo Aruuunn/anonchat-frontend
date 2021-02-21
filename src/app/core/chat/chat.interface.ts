@@ -8,5 +8,6 @@ export interface ChatInterface {
   messages: MessageInterface[];
   recipientId: string;
   type: ChatType;
+  sessionEstablished: boolean;
   name?: string;
 }
