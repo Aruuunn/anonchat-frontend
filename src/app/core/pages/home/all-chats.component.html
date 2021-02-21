@@ -47,7 +47,7 @@
         {{chat.name ? chat.name : "Anonymous " }}</h3>
       <div class="flex justify-between mt-3 items-center">
         <p style="height: 24px" class="overflow-hidden overflow-ellipsis">
-          {{chat.messages.length !== 0 ? (chat.messages[chat.messages.length - 1]).message : ''}}
+          {{chat.messages.length !== 0 ? (chat.messages[chat.messages.length - 1]).messageText : ''}}
         </p>
         <span
           *ngIf="chatService.getNumberOfUnreadMessages(chat)!==0 && chat.id !== currentChatId.getValue()"

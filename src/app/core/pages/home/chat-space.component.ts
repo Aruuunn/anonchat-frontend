@@ -22,11 +22,13 @@ export class ChatSpaceComponent {
     if (chatId === null || typeof chatId === 'undefined' || messageText.trim().length === 0) {
       return;
     }
+    const temporaryMessageId = this.chatService.newMessageSentByLocalUser(chatId, messageText);
+    this.messageText = '';
 
-    this.chatService.sendMessage(chatId, messageText).then(() => {
-      this.messageText = '';
-      this.chatService.newMessageSentByLocalUser(chatId, messageText);
-    });
+    this.chatService.sendMessage(chatId, messageText).then((messageId) => {
+      if (temporaryMessageId) {
+        this.chatService.messageSuccessfullySentByLocalUser(chatId, temporaryMessageId, messageId);
+      }
+    }).catch(e => console.log('ERROR ', e));
   }
-
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {AuthService} from '../../auth/auth.service';
 import {Router} from '@angular/router';
@@ -57,7 +57,7 @@ export class HomeComponent implements OnInit {
                 console.log('Created Self room...');
                 this.websocketService.removeEventListener(Events.SEND_MESSAGE);
                 this.websocketService.addEventListener(
-                  Events.SEND_MESSAGE, (payload: { chatId: string, message: MessageType, messageId: string }) => {
+                  Events.SEND_MESSAGE, (payload: { chatId: string, message: MessageType & { messageId: string }, messageId: string }) => {
                     const {message, chatId, messageId} = payload;
                     console.log('Received a Message ' + messageId);
                     this.chatService.newReceivedMessage({chatId, message}).then(() => {
