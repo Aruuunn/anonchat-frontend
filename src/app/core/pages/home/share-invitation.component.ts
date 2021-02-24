@@ -1,5 +1,5 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import {UserService} from '../../user/user.service';
+import {UserService} from '../../services/user/user.service';
 import urlJoin from 'url-join';
 import {BehaviorSubject} from 'rxjs';
 

@@ -5,7 +5,7 @@ import {map} from 'rxjs/operators';
 import urlJoin from 'url-join';
 import {HttpClient} from '@angular/common/http';
 import {HttpOptions} from './http-options.interface';
-import {API_BASE_URL} from '../../../config/api.config';
+import {API_BASE_URL} from '../../../../config/api.config';
 import {Router} from '@angular/router';
 
 
