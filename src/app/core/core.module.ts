@@ -15,6 +15,7 @@ import {InvitationDetailsResolver} from './resolvers/invitation-details.resolver
 import {ChatService} from './services/chat/chat.service';
 import {AuthGuard} from './services/auth/auth.guard';
 import {LoadingStateService} from './services/loading-state/loading-state.service';
+import {SideBarComponent} from './pages/home/components/side-bar/side-bar.component';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import {LoadingStateService} from './services/loading-state/loading-state.servic
     ChatSpaceComponent,
     AcceptInvitationComponent,
     WelcomeComponent,
-    ShareInvitationComponent
+    ShareInvitationComponent,
+    SideBarComponent
   ],
   imports: [
     CommonModule,

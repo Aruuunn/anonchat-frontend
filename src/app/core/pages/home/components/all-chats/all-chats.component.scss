@@ -1,0 +1,14 @@
+
+
+.all-chats-container {
+  height: calc( 100vh - 70px );
+  width: 100%;
+}
+
+
+@media screen and (min-width: 768px) {
+  .all-chats-container {
+    height: 100vh;
+    width: 300px;
+  }
+}

@@ -6,14 +6,13 @@ import {Router} from '@angular/router';
 @Component({
   selector: 'app-all-chats',
   templateUrl: './all-chats.component.html',
-  styleUrls: ['../../../../../../styles/palette.scss']
+  styleUrls: ['../../../../../../styles/palette.scss', './all-chats.component.scss']
 })
 export class AllChatsComponent {
   constructor(public chatService: ChatService, private router: Router) {
   }
 
   @Input() currentChatId!: BehaviorSubject<null | string>;
-  @Input() isInvitationShareModalOpen!: BehaviorSubject<boolean>;
   @Input() onLogout!: () => void;
   @Input() chatType!: string;
 }
