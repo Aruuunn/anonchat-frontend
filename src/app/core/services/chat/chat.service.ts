@@ -2,10 +2,10 @@ import {Injectable} from '@angular/core';
 import {DeviceType, MessageType, SessionCipher} from '@privacyresearch/libsignal-protocol-typescript';
 import {ChatInterface} from './chat.interface';
 import {MessageInterface, MessageType as MessageTypeEnum} from './message.interface';
-import {SignalService} from '../../../../projects/signal/src/lib/signal.service';
+import {SignalService} from '../../../../../projects/signal/src/lib/signal.service';
 import {WebsocketsService} from '../websockets/websockets.service';
 import {Events} from '../websockets/events.enum';
-import {convertAllBufferStringToArrayBuffer} from '../../../../projects/signal/src/lib/utils/array-buffer.utils';
+import {convertAllBufferStringToArrayBuffer} from '../../../../../projects/signal/src/lib/utils/array-buffer.utils';
 import {ChatType} from './chat-type.enum';
 import {colors, uniqueNamesGenerator, animals} from 'unique-names-generator';
 

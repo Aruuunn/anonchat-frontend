@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {Router, NavigationStart, NavigationEnd, NavigationError, NavigationCancel, Event} from '@angular/router';
-import {LoadingStateService} from './core/services/loading-state.service';
+import {LoadingStateService} from './core/services/loading-state/loading-state.service';
 
 
 @Component({

@@ -1,7 +1,7 @@
 import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@angular/router';
 import {Injectable} from '@angular/core';
-import {HttpService} from '../http/http.service';
-import {AuthService} from '../auth/auth.service';
+import {HttpService} from '../services/http/http.service';
+import {AuthService} from '../services/auth/auth.service';
 import {isValidJwt} from '../../shared/utils/is-valid-jwt';
 
 

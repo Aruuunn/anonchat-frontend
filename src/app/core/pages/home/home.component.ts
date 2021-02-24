@@ -1,13 +1,13 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import {AuthService} from '../../auth/auth.service';
+import {AuthService} from '../../services/auth/auth.service';
 import {Router} from '@angular/router';
-import {WebsocketsService} from '../../websockets/websockets.service';
+import {WebsocketsService} from '../../services/websockets/websockets.service';
 import {WEBSOCKET_URI} from '../../../../config/api.config';
-import {Events} from '../../websockets/events.enum';
-import {ChatService} from '../../chat/chat.service';
+import {Events} from '../../services/websockets/events.enum';
+import {ChatService} from '../../services/chat/chat.service';
 import {MessageType} from '@privacyresearch/libsignal-protocol-typescript';
-import {ChatType} from '../../chat/chat-type.enum';
+import {ChatType} from '../../services/chat/chat-type.enum';
 
 
 @Component({

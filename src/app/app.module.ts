@@ -6,7 +6,7 @@ import {AppComponent} from './app.component';
 import {SignalModule} from '../../projects/signal/src/lib/signal.module';
 import {HttpClientModule} from '@angular/common/http';
 import {CoreModule} from './core/core.module';
-import {AuthService} from './core/auth/auth.service';
+import {AuthService} from './core/services/auth/auth.service';
 import {FormsModule} from '@angular/forms';
 
 @NgModule({

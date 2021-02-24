@@ -1,14 +1,14 @@
 import {Component} from '@angular/core';
 import {SignalService} from '../../../../../projects/signal/src/lib/signal.service';
 import {NgForm} from '@angular/forms';
-import {HttpService} from '../../http/http.service';
-import {UserService} from '../../user/user.service';
+import {HttpService} from '../../services/http/http.service';
+import {UserService} from '../../services/user/user.service';
 import {Router} from '@angular/router';
-import {AuthService} from '../../auth/auth.service';
+import {AuthService} from '../../services/auth/auth.service';
 import {ActivatedRoute} from '@angular/router';
 import {convertAllArrayBufferToString} from '../../../../../projects/signal/src/lib/utils/array-buffer.utils';
-import {ChatService} from '../../chat/chat.service';
-import {LoadingStateService} from '../../services/loading-state.service';
+import {ChatService} from '../../services/chat/chat.service';
+import {LoadingStateService} from '../../services/loading-state/loading-state.service';
 
 @Component({
   selector: 'app-welcome',

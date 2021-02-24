@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {HttpService} from '../../http/http.service';
-import {ChatService} from '../../chat/chat.service';
-import {LoadingStateService} from '../../services/loading-state.service';
-import {ChatType} from '../../chat/chat-type.enum';
+import {HttpService} from '../../services/http/http.service';
+import {ChatService} from '../../services/chat/chat.service';
+import {LoadingStateService} from '../../services/loading-state/loading-state.service';
+import {ChatType} from '../../services/chat/chat-type.enum';
 
 
 // @TODO make sure the same person cannot accept the invitation more than once in frontend and backend
