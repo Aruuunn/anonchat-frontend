@@ -1,12 +1,12 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import {UserService} from '../../services/user/user.service';
+import {UserService} from '../../../../services/user/user.service';
 import urlJoin from 'url-join';
 import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'app-share-invitation',
   templateUrl: './share-invitation.component.html',
-  styleUrls: ['../../../../styles/palette.scss']
+  styleUrls: ['../../../../../../styles/palette.scss']
 })
 export class ShareInvitationComponent implements OnInit {
   constructor(private userService: UserService) {

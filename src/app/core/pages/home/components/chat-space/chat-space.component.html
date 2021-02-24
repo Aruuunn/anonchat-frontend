@@ -9,7 +9,7 @@
         </svg>
       </button>
 
-      <img src="assets/chat-bubble.svg" class="mr-2 hidden md:block" alt="">
+      <img src="../../../../../../assets/chat-bubble.svg" class="mr-2 hidden md:block" alt="">
       {{chatService.getChatName(currentChatId.getValue())}}
     </h2>
   </div>
@@ -18,14 +18,14 @@
       <div
         *ngFor="let message of chatService.getMessages(currentChatId.getValue())">
         <div class="relative mt-2" *ngIf="message.type === 'RECEIVED'">
-          <img src="assets/gray-triangle.svg" style="top: 25%;" class="absolute left-0" alt="">
+          <img src="../../../../../../assets/gray-triangle.svg" style="top: 25%;" class="absolute left-0" alt="">
           <div style="min-width: 150px; max-width: 30%"
                class="bg-black-4  text-white rounded-lg inline-block ml-6 pt-2 pb-2 pl-3 pr-3">
             {{ message.messageText }}
           </div>
         </div>
         <div class="relative mt-2 w-full flex justify-end" *ngIf="message.type === 'SENT'">
-          <img src="assets/green-triangle.svg" style="top: 25%;" class="absolute right-0" alt="">
+          <img src="../../../../../../assets/green-triangle.svg" style="top: 25%;" class="absolute right-0" alt="">
           <div style="min-width: 150px; max-width: 30%;"
                class="flex justify-between items-center bg-green-darker inline text-white rounded-lg block mr-6 pt-2 pb-2 pl-3 pr-3">
            <span>
@@ -39,7 +39,7 @@
       </div>
     </div>
     <form class="relative" (submit)="onMessageSend()">
-      <img src="assets/add-icon.svg" alt="new message" class="absolute top-0">
+      <img src="../../../../../../assets/add-icon.svg" alt="new message" class="absolute top-0">
       <label for="message" style="display: none">Message to Send</label>
       <input id="message" [(ngModel)]="messageText"
              [ngModelOptions]="{ standalone: true }"

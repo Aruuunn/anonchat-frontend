@@ -1,12 +1,12 @@
 import {Component, Input} from '@angular/core';
-import {ChatService} from '../../services/chat/chat.service';
+import {ChatService} from '../../../../services/chat/chat.service';
 import {BehaviorSubject} from 'rxjs';
 
 
 @Component({
   selector: 'app-chat-space',
   templateUrl: './chat-space.component.html',
-  styleUrls: ['../../../../styles/palette.scss', './chat-space.component.sass']
+  styleUrls: ['../../../../../../styles/palette.scss', './chat-space.component.sass']
 })
 export class ChatSpaceComponent {
   constructor(public chatService: ChatService) {
