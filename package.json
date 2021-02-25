@@ -9,7 +9,7 @@
     "prebuild": "NODE_ENV=production npm run postcss:build",
     "ng": "ng",
     "start": "ng serve  & npm run postcss:watch",
-    "build": "ng build --prod --base-href /anonchat/",
+    "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
