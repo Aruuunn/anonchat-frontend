@@ -1,6 +1,6 @@
 <app-share-invitation *ngIf="isInvitationShareModalOpen.getValue()"
                       [isInvitationShareModalOpen]="isInvitationShareModalOpen"></app-share-invitation>
-<div class="w-screen flex flex-col flex-col-reverse md:flex-row ">
+<div class="w-screen flex flex-col-reverse md:flex-row">
   <app-side-bar [onLogout]="onLogout" [isInvitationShareModalOpen]="isInvitationShareModalOpen"
                 [currentChatId]="currentChatId" [currentChatType]="currentChatType"></app-side-bar>
   <div class="w-full h-full flex">
