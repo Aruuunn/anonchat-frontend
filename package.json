@@ -9,11 +9,10 @@
     "prebuild": "NODE_ENV=production npm run postcss:build",
     "ng": "ng",
     "start": "ng serve  & npm run postcss:watch",
-    "build": "NODE_ENV=production ng build --prod",
+    "build": "NODE_ENV=production ng build --prod --base-href /app",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
-    "deploy": "npm run build && ngh -d dist/chat-app --no-dotfiles --no-silent --repo git@github.com:ArunMurugan78/anonchat.git --name ArunMurugan78 --email arunmurugan200@gmail.com"
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {
