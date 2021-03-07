@@ -4,5 +4,5 @@
  */
 export enum ChatType {
   ANONYMOUS = 'ANONYMOUS',
-  KNOWN = 'KNOWN'
+  KNOWN = 'KNOWN',
 }

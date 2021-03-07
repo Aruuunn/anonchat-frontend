@@ -1,6 +1,6 @@
-import {DeviceType} from '@privacyresearch/libsignal-protocol-typescript';
-import {MessageInterface} from './message.interface';
-import {ChatType} from './chat-type.enum';
+import { DeviceType } from '@privacyresearch/libsignal-protocol-typescript';
+import { MessageInterface } from './message.interface';
+import { ChatType } from './chat-type.enum';
 
 export interface ChatInterface {
   id: string;

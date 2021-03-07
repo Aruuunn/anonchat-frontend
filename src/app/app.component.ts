@@ -1,12 +1,18 @@
-import {Component} from '@angular/core';
-import {Router, NavigationStart, NavigationEnd, NavigationError, NavigationCancel, Event} from '@angular/router';
-import {LoadingStateService} from './core/services/loading-state/loading-state.service';
-
+import { Component } from '@angular/core';
+import {
+  Router,
+  NavigationStart,
+  NavigationEnd,
+  NavigationError,
+  NavigationCancel,
+  Event,
+} from '@angular/router';
+import { LoadingStateService } from './core/services/loading-state/loading-state.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['../styles/palette.scss']
+  styleUrls: ['../styles/palette.scss'],
 })
 export class AppComponent {
   constructor(
@@ -24,9 +30,11 @@ export class AppComponent {
       this.loadingStateService.isLoading = true;
     }
 
-    if (routerEvent instanceof NavigationEnd ||
+    if (
+      routerEvent instanceof NavigationEnd ||
       routerEvent instanceof NavigationCancel ||
-      routerEvent instanceof NavigationError) {
+      routerEvent instanceof NavigationError
+    ) {
       this.loadingStateService.isLoading = false;
     }
   }

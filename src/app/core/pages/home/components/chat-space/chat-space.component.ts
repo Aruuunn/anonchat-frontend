@@ -1,16 +1,17 @@
-import {Component, Input} from '@angular/core';
-import {ChatService} from '../../../../services/chat/chat.service';
-import {BehaviorSubject} from 'rxjs';
-
+import { Component, Input } from '@angular/core';
+import { ChatService } from '../../../../services/chat/chat.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-chat-space',
   templateUrl: './chat-space.component.html',
-  styleUrls: ['../../../../../../styles/palette.scss', './chat-space.component.sass']
+  styleUrls: [
+    '../../../../../../styles/palette.scss',
+    './chat-space.component.sass',
+  ],
 })
 export class ChatSpaceComponent {
-  constructor(public chatService: ChatService) {
-  }
+  constructor(public chatService: ChatService) {}
 
   @Input() currentChatId!: BehaviorSubject<null | string>;
 
@@ -19,16 +20,30 @@ export class ChatSpaceComponent {
   onMessageSend(): void {
     const chatId = this.currentChatId.getValue();
     const messageText = this.messageText;
-    if (chatId === null || typeof chatId === 'undefined' || messageText.trim().length === 0) {
+    if (
+      chatId === null ||
+      typeof chatId === 'undefined' ||
+      messageText.trim().length === 0
+    ) {
       return;
     }
-    const temporaryMessageId = this.chatService.newMessageSentByLocalUser(chatId, messageText);
+    const temporaryMessageId = this.chatService.newMessageSentByLocalUser(
+      chatId,
+      messageText
+    );
     this.messageText = '';
 
-    this.chatService.sendMessage(chatId, messageText).then((messageId) => {
-      if (temporaryMessageId) {
-        this.chatService.messageSuccessfullySentByLocalUser(chatId, temporaryMessageId, messageId);
-      }
-    }).catch(e => console.log('ERROR ', e));
+    this.chatService
+      .sendMessage(chatId, messageText)
+      .then((messageId) => {
+        if (temporaryMessageId) {
+          this.chatService.messageSuccessfullySentByLocalUser(
+            chatId,
+            temporaryMessageId,
+            messageId
+          );
+        }
+      })
+      .catch((e) => console.log('ERROR ', e));
   }
 }

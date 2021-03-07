@@ -1,0 +1,16 @@
+<div class="fixed w-screen h-screen bg-black opacity-50 top-0 z-10 left-0">
+</div>
+
+<div class="container z-20 rounded" [ngStyle]="{ 'top': getTopValue() + 'px' }">
+  <img src="assets/green-left-triangle.svg" alt="" [ngStyle]="{ 'top': elRef.offsetTop + 10 + 'px' }" class="arrow"/>
+  <div class="p-4">
+    <div class="font-bold">{{title}}</div>
+    <p>
+      {{description}}
+    </p>
+  </div>
+
+  <div class="flex w-full justify-end items-center p-2">
+    <button class="uppercase font-bold outline-none border-none focus:ring ring-1 ring-green-400">Next</button>
+  </div>
+</div>

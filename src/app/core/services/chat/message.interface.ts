@@ -1,8 +1,7 @@
 export enum MessageType {
   SENT = 'SENT',
-  RECEIVED = 'RECEIVED'
+  RECEIVED = 'RECEIVED',
 }
-
 
 export interface MessageInterface {
   id: string;

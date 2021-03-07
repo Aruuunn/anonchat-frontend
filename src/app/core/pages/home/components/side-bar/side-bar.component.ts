@@ -1,17 +1,18 @@
-import {Component, Input} from '@angular/core';
-import {ChatService} from '../../../../services/chat/chat.service';
-import {Router} from '@angular/router';
-import {BehaviorSubject} from 'rxjs';
-
+import { Component, Input } from '@angular/core';
+import { ChatService } from '../../../../services/chat/chat.service';
+import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   templateUrl: './side-bar.component.html',
   selector: 'app-side-bar',
-  styleUrls: ['../../../../../../styles/palette.scss', './side-bar.component.scss']
+  styleUrls: [
+    '../../../../../../styles/palette.scss',
+    './side-bar.component.scss',
+  ],
 })
 export class SideBarComponent {
-  constructor(public chatService: ChatService, private router: Router) {
-  }
+  constructor(public chatService: ChatService, private router: Router) {}
 
   @Input() isInvitationShareModalOpen!: BehaviorSubject<boolean>;
   @Input() onLogout!: () => void;

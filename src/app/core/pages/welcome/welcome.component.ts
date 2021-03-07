@@ -62,9 +62,8 @@ export class WelcomeComponent {
             const nextURL = this.activatedRoute.snapshot.queryParamMap.get(
               'next'
             );
-            this.router.navigateByUrl(
-              nextURL?.replace(encodeURIComponent(BASE_PATH), '') ?? '/'
-            );
+
+            this.router.navigateByUrl(nextURL?.replace(BASE_PATH, '') ?? '/');
           },
           ({ error }) => {
             this.loadingStateService.isLoading = false;

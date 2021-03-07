@@ -1,4 +1,4 @@
-import {HttpHeaders, HttpParams} from '@angular/common/http';
+import { HttpHeaders, HttpParams } from '@angular/common/http';
 
 export interface HttpOptions {
   headers?: HttpHeaders | { [p: string]: string | string[] } | undefined;

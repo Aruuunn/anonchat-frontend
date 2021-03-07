@@ -1,17 +1,17 @@
-import {Route} from '@angular/router';
-import {AcceptInvitationComponent} from './pages/accept-invitation/accept-invitation.component';
-import {WelcomeComponent} from './pages/welcome/welcome.component';
-import {InvitationDetailsResolver} from './resolvers/invitation-details.resolver';
-import {AuthGuard} from './services/auth/auth.guard';
-
+import { Route } from '@angular/router';
+import { AcceptInvitationComponent } from './pages/accept-invitation/accept-invitation.component';
+import { WelcomeComponent } from './pages/welcome/welcome.component';
+import { InvitationDetailsResolver } from './resolvers/invitation-details.resolver';
+import { AuthGuard } from './services/auth/auth.guard';
 
 export const coreRoutes: Route[] = [
   {
-    path: 'accept-invitation/:invitationId', component: AcceptInvitationComponent,
+    path: 'accept-invitation/:invitationId',
+    component: AcceptInvitationComponent,
     resolve: {
-      invitationDetails: InvitationDetailsResolver
+      invitationDetails: InvitationDetailsResolver,
     },
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
-  {path: 'welcome', component: WelcomeComponent}
+  { path: 'welcome', component: WelcomeComponent },
 ];

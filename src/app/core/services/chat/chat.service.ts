@@ -1,34 +1,40 @@
-import {Injectable} from '@angular/core';
-import {DeviceType, MessageType, SessionCipher} from '@privacyresearch/libsignal-protocol-typescript';
-import {ChatInterface} from './chat.interface';
-import {MessageInterface, MessageType as MessageTypeEnum} from './message.interface';
-import {SignalService} from '../../../../../projects/signal/src/lib/signal.service';
-import {WebsocketsService} from '../websockets/websockets.service';
-import {Events} from '../websockets/events.enum';
-import {convertAllBufferStringToArrayBuffer} from '../../../../../projects/signal/src/lib/utils/array-buffer.utils';
-import {ChatType} from './chat-type.enum';
-import {colors, uniqueNamesGenerator, animals} from 'unique-names-generator';
-
+import { Injectable } from '@angular/core';
+import {
+  DeviceType,
+  MessageType,
+  SessionCipher,
+} from '@privacyresearch/libsignal-protocol-typescript';
+import { ChatInterface } from './chat.interface';
+import {
+  MessageInterface,
+  MessageType as MessageTypeEnum,
+} from './message.interface';
+import { SignalService } from '../../../../../projects/signal/src/lib/signal.service';
+import { WebsocketsService } from '../websockets/websockets.service';
+import { Events } from '../websockets/events.enum';
+import { convertAllBufferStringToArrayBuffer } from '../../../../../projects/signal/src/lib/utils/array-buffer.utils';
+import { ChatType } from './chat-type.enum';
+import { colors, uniqueNamesGenerator, animals } from 'unique-names-generator';
 
 // @TODO provide storage backend through DI
 // @TODO refactor this ugly code
 // @TODO modify code to make speed optimal
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ChatService {
   constructor(
     private signalService: SignalService,
-    private websocketService: WebsocketsService,
-  ) {
-  }
+    private websocketService: WebsocketsService
+  ) {}
 
   private textEncoder: TextEncoder = new TextEncoder();
   private textDecoder: TextDecoder = new TextDecoder();
 
   private sessionCiphers: Record<string, SessionCipher> = {};
 
-  chats: ChatInterface[] = JSON.parse(localStorage.getItem('chats') as string) ?? [];
+  chats: ChatInterface[] =
+    JSON.parse(localStorage.getItem('chats') as string) ?? [];
 
   clearChats(): void {
     this.chats = [];
@@ -58,8 +64,20 @@ export class ChatService {
   newChat(
     chatId: string,
     recipientId: string,
-    type: ChatType, bundle?: DeviceType<string>, name?: string, sessionEstablished: boolean = false): ChatInterface {
-    this.chats.unshift({id: chatId, bundle, messages: [], name, recipientId, type, sessionEstablished});
+    type: ChatType,
+    bundle?: DeviceType<string>,
+    name?: string,
+    sessionEstablished: boolean = false
+  ): ChatInterface {
+    this.chats.unshift({
+      id: chatId,
+      bundle,
+      messages: [],
+      name,
+      recipientId,
+      type,
+      sessionEstablished,
+    });
     this.saveChats(this.chats);
     return this.chats[0];
   }
@@ -80,7 +98,7 @@ export class ChatService {
       message.read = true;
     }
     if (chat) {
-      this.updateChat({...chat, messages});
+      this.updateChat({ ...chat, messages });
     }
 
     return messages;
@@ -129,7 +147,10 @@ export class ChatService {
     return chat.name ?? 'Unknown';
   }
 
-  newMessageSentByLocalUser(chatId: string, messageText: string): string | null {
+  newMessageSentByLocalUser(
+    chatId: string,
+    messageText: string
+  ): string | null {
     // tslint:disable-next-line:no-shadowed-variable
     const chat = this.chats.find((chat) => chat.id === chatId);
     if (chat) {
@@ -139,7 +160,7 @@ export class ChatService {
         type: MessageTypeEnum.SENT,
         read: true,
         sent: false,
-        id: messageId
+        id: messageId,
       };
       chat.messages.push(message);
       this.updateChat(chat, true);
@@ -148,11 +169,15 @@ export class ChatService {
     return null;
   }
 
-  messageSuccessfullySentByLocalUser(chatId: string, temporaryMessageId: string, messageId: string): void {
+  messageSuccessfullySentByLocalUser(
+    chatId: string,
+    temporaryMessageId: string,
+    messageId: string
+  ): void {
     // tslint:disable-next-line:no-shadowed-variable
     const chat = this.chats.find((chat) => chat.id === chatId);
     if (chat) {
-      const message = chat.messages.find(m => m.id === temporaryMessageId);
+      const message = chat.messages.find((m) => m.id === temporaryMessageId);
       if (message) {
         message.sent = true;
         message.id = messageId;
@@ -161,18 +186,32 @@ export class ChatService {
   }
 
   async getChat(chatId: string): Promise<ChatInterface> {
-    return this.chats.find((chat) => chat.id === chatId) ?? await new Promise((res, rej) => {
-      // tslint:disable-next-line:no-shadowed-variable
-      this.websocketService.emit(Events.FETCH_RECIPIENT_ID, {chatId}, ({recipientId}: { recipientId: string }) => {
-        const chat = this.newChat(chatId, recipientId, ChatType.KNOWN, undefined, uniqueNamesGenerator({
-          style: 'capital',
-          separator: ' ',
-          dictionaries: [colors, animals],
-          length: 2
-        }), true);
-        res(chat);
-      });
-    });
+    return (
+      this.chats.find((chat) => chat.id === chatId) ??
+      (await new Promise((res, rej) => {
+        // tslint:disable-next-line:no-shadowed-variable
+        this.websocketService.emit(
+          Events.FETCH_RECIPIENT_ID,
+          { chatId },
+          ({ recipientId }: { recipientId: string }) => {
+            const chat = this.newChat(
+              chatId,
+              recipientId,
+              ChatType.KNOWN,
+              undefined,
+              uniqueNamesGenerator({
+                style: 'capital',
+                separator: ' ',
+                dictionaries: [colors, animals],
+                length: 2,
+              }),
+              true
+            );
+            res(chat);
+          }
+        );
+      }))
+    );
   }
 
   private async getSessionCipher(chat: ChatInterface): Promise<SessionCipher> {
@@ -186,7 +225,9 @@ export class ChatService {
       );
       chat.sessionEstablished = true;
     }
-    const sessionCipher = this.sessionCiphers[chat.id] ?? await this.signalService.getSessionCipher(chat.recipientId, 1);
+    const sessionCipher =
+      this.sessionCiphers[chat.id] ??
+      (await this.signalService.getSessionCipher(chat.recipientId, 1));
     if (!this.sessionCiphers[chat.id]) {
       this.sessionCiphers[chat.id] = sessionCipher;
     }
@@ -194,48 +235,81 @@ export class ChatService {
     return sessionCipher;
   }
 
-  async encryptMessage(payload: { chatId: string, plaintext: string }): Promise<MessageType> {
-    const {chatId, plaintext} = payload;
+  async encryptMessage(payload: {
+    chatId: string;
+    plaintext: string;
+  }): Promise<MessageType> {
+    const { chatId, plaintext } = payload;
     const chat = await this.getChat(chatId);
     const sessionCipher = await this.getSessionCipher(chat);
-    return await sessionCipher.encrypt(this.textEncoder.encode(plaintext).buffer);
+    return await sessionCipher.encrypt(
+      this.textEncoder.encode(plaintext).buffer
+    );
   }
 
-  async decryptMessage(payload: { chatId: string, message: MessageType }): Promise<string> {
-    const {chatId, message} = payload;
+  async decryptMessage(payload: {
+    chatId: string;
+    message: MessageType;
+  }): Promise<string> {
+    const { chatId, message } = payload;
     const chat = await this.getChat(chatId);
     const sessionCipher = await this.getSessionCipher(chat);
-    const buffer = await this.signalService.decryptMessage(message, sessionCipher);
+    const buffer = await this.signalService.decryptMessage(
+      message,
+      sessionCipher
+    );
     return this.textDecoder.decode(buffer);
   }
 
   async sendMessage(chatId: string, plaintext: string): Promise<string> {
-    const message: MessageType = await this.encryptMessage({chatId, plaintext});
+    const message: MessageType = await this.encryptMessage({
+      chatId,
+      plaintext,
+    });
     return new Promise<string>((res, _) => {
-      this.websocketService.emit(Events.SEND_MESSAGE, {chatId, message}, (messageId) => {
-        console.log('Message Sent.... ' + messageId);
-        res(messageId);
-      });
+      this.websocketService.emit(
+        Events.SEND_MESSAGE,
+        { chatId, message },
+        (messageId) => {
+          console.log('Message Sent.... ' + messageId);
+          res(messageId);
+        }
+      );
     });
   }
 
-
-  async newReceivedMessage(payload: { chatId: string, message: MessageType & { messageId: string } }): Promise<void> {
-    const {chatId, message: {messageId}} = payload;
+  async newReceivedMessage(payload: {
+    chatId: string;
+    message: MessageType & { messageId: string };
+  }): Promise<void> {
+    const {
+      chatId,
+      message: { messageId },
+    } = payload;
     const plaintext = await this.decryptMessage(payload);
     const chat = await this.getChat(chatId);
-    chat.messages.push({type: MessageTypeEnum.RECEIVED, messageText: plaintext, read: false, id: messageId});
+    chat.messages.push({
+      type: MessageTypeEnum.RECEIVED,
+      messageText: plaintext,
+      read: false,
+      id: messageId,
+    });
     this.updateChat(chat, true);
   }
 
   fetchAllChats(type?: string): ChatInterface[] {
-    return this.chats.filter(chat => typeof type === 'undefined' || chat.type === type);
+    return this.chats.filter(
+      (chat) => typeof type === 'undefined' || chat.type === type
+    );
   }
 
   hasUnreadMessage(type?: string): boolean {
     const chats = this.fetchAllChats(type);
     for (const chat of chats) {
-      if (chat.messages.length > 0 && !chat.messages[chat.messages.length - 1].read) {
+      if (
+        chat.messages.length > 0 &&
+        !chat.messages[chat.messages.length - 1].read
+      ) {
         return true;
       }
     }

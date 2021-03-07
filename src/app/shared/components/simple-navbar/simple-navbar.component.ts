@@ -5,10 +5,7 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './simple-navbar.component.html',
 })
 export class SimpleNavbarComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

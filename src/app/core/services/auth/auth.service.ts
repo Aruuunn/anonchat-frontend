@@ -1,5 +1,5 @@
-import {Injectable, OnDestroy} from '@angular/core';
-import {BehaviorSubject,} from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 interface AuthState {
   accessToken: string | null;
@@ -8,17 +8,18 @@ interface AuthState {
 
 const initialAuthState: AuthState = {
   accessToken: sessionStorage.getItem('accessToken'),
-  isLoggedIn: localStorage.getItem('isLoggedIn') === 'true'
+  isLoggedIn: localStorage.getItem('isLoggedIn') === 'true',
 };
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService implements OnDestroy {
-  public state: BehaviorSubject<AuthState> = new BehaviorSubject<AuthState>(initialAuthState);
+  public state: BehaviorSubject<AuthState> = new BehaviorSubject<AuthState>(
+    initialAuthState
+  );
 
-  constructor() {
-  }
+  constructor() {}
 
   get isLoggedIn(): boolean {
     return this.state.getValue().isLoggedIn;
@@ -26,9 +27,8 @@ export class AuthService implements OnDestroy {
 
   set isLoggedIn(value) {
     localStorage.setItem('isLoggedIn', `${value}`);
-    this.state.next({...this.state.getValue(), isLoggedIn: value});
+    this.state.next({ ...this.state.getValue(), isLoggedIn: value });
   }
-
 
   get accessToken(): string | null {
     return this.state.getValue().accessToken;
@@ -43,7 +43,7 @@ export class AuthService implements OnDestroy {
       return;
     }
     sessionStorage.setItem('accessToken', newAccessToken);
-    this.state.next({...this.state.getValue(), accessToken: newAccessToken});
+    this.state.next({ ...this.state.getValue(), accessToken: newAccessToken });
   }
 
   ngOnDestroy(): void {

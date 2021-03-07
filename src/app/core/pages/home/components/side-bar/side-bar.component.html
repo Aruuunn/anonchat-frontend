@@ -1,6 +1,6 @@
 <div class="bg-black-1 fixed bottom-0 left-0 md:static flex items-center side-bar-container">
   <div class="item">
-    <button
+    <button #r1
       (click)="currentChatId.next(currentChatType.getValue() === 'KNOWN'? currentChatId.getValue() :null); currentChatType.next('KNOWN')"
       style="border-radius: 50%;height: 50px;width: 50px"
       [ngClass]="{ 'text-white bg-green': currentChatType.getValue() === 'KNOWN', ' text-green':  currentChatType.getValue() !== 'KNOWN' }"
@@ -16,6 +16,8 @@
       <span *ngIf="chatService.hasUnreadMessage('KNOWN')"
             class="bg-red-500 w-3 h-3 absolute top-0 -right-0 text-white rounded-full"></span>
     </button>
+    <app-tutorial [description]="'Desc'" title="Known" [elRef]="r1"></app-tutorial>
+
   </div>
   <div class="item">
     <button (click)="currentChatId.next(currentChatType.getValue() === 'ANONYMOUS'? currentChatId.getValue() :null); currentChatType.next('ANONYMOUS')"
@@ -60,7 +62,7 @@
     <button
       (click)="onLogout.bind(this)()"
       style="border-radius: 50%;height: 50px;width: 50px"
-      class="text-green flex justify-center items-center  focus:outline-none focus:ring-2 ring-green-300">
+      class="text-green flex relative justify-center items-center focus:outline-none focus:ring-2 ring-green-300">
       <img src="assets/logout.svg" style="height: 30px;width: 30px;" alt="search chats">
     </button>
   </div>

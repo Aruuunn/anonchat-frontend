@@ -1,20 +1,32 @@
-import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@angular/router';
-import {Injectable} from '@angular/core';
-import {HttpService} from '../services/http/http.service';
-import {AuthService} from '../services/auth/auth.service';
-import {isValidJwt} from '../../shared/utils/is-valid-jwt';
-
+import {
+  ActivatedRouteSnapshot,
+  Resolve,
+  Router,
+  RouterStateSnapshot,
+} from '@angular/router';
+import { Injectable } from '@angular/core';
+import { HttpService } from '../services/http/http.service';
+import { AuthService } from '../services/auth/auth.service';
+import { isValidJwt } from '../../shared/utils/is-valid-jwt';
 
 @Injectable()
 export class InvitationDetailsResolver implements Resolve<any> {
-  constructor(private httpService: HttpService, private authService: AuthService, private router: Router) {
-  }
+  constructor(
+    private httpService: HttpService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   private fetchInvitationDetails(invitationId: string): Promise<any> {
-    return this.httpService.get(`/invitation/${invitationId.trim()}`).toPromise();
+    return this.httpService
+      .get(`/invitation/${invitationId.trim()}`)
+      .toPromise();
   }
 
-  async resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
+  async resolve(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Promise<any> {
     const invitationId = route.paramMap.get('invitationId');
 
     if (invitationId === null) {
@@ -38,5 +50,4 @@ export class InvitationDetailsResolver implements Resolve<any> {
       }
     }
   }
-
 }
