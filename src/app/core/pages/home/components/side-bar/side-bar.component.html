@@ -1,4 +1,5 @@
-<div class="bg-black-1 fixed bottom-0 left-0 md:static flex items-center side-bar-container">
+<div class="bg-black-1 fixed bottom-0 left-0 md:static flex items-center side-bar-container"
+     [ngStyle]="{'bottom': currentChatId.getValue()!==null ?  '-10000px' : '0'}">
   <div class="item">
     <button #r1
             (click)="currentChatId.next(currentChatType.getValue() === 'KNOWN'? currentChatId.getValue() :null); currentChatType.next('KNOWN')"
@@ -17,7 +18,8 @@
             class="bg-red-500 w-3 h-3 absolute top-0 -right-0 text-white rounded-full"></span>
     </button>
     <div *ngIf="this.tutorialService.currentSlide.getValue() === 1 && !this.tutorialService.tutorialCompleted">
-      <app-tutorial [description]="'You dont know the person you chat with, but the other person does!'" title="Known Chats"
+      <app-tutorial [description]="'You dont know the person you chat with, but the other person does!'"
+                    title="Known Chats"
                     [elRef]="r1"></app-tutorial>
     </div>
 

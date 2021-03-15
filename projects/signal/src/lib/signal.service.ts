@@ -33,7 +33,7 @@ export class SignalService {
   }
 
   private generateRandomId(): number {
-    return Math.floor(10000 * Math.random());
+    return Math.ceil(10000 * Math.random())+1;
   }
 
   async generateOnePreKey(): Promise<PreKeyPairType> {
