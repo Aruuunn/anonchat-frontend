@@ -8,6 +8,7 @@ import { Events } from '../../services/websockets/events.enum';
 import { ChatService } from '../../services/chat/chat.service';
 import { MessageType } from '@privacyresearch/libsignal-protocol-typescript';
 import { ChatType } from '../../services/chat/chat-type.enum';
+import { InvitationModalService } from '../../services/invitation-modal/invitation-modal.service';
 
 @Component({
   selector: 'app-home',
@@ -19,11 +20,11 @@ export class HomeComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private websocketService: WebsocketsService,
-    public chatService: ChatService
+    public chatService: ChatService,
+    public invitationModalService: InvitationModalService
   ) {}
 
   currentChatId = new BehaviorSubject<null | string>(null);
-  isInvitationShareModalOpen = new BehaviorSubject<boolean>(false);
   currentChatType = new BehaviorSubject<string>(ChatType.ANONYMOUS);
 
   onLogout(): void {

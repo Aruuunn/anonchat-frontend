@@ -20,6 +20,8 @@ import { AuthGuard } from './services/auth/auth.guard';
 import { LoadingStateService } from './services/loading-state/loading-state.service';
 import { SideBarComponent } from './pages/home/components/side-bar/side-bar.component';
 import { TutorialComponent } from './components/tutorial/tutorial.component';
+import { TutorialService } from './services/tutorial/tutorial.service';
+import { InvitationModalService } from './services/invitation-modal/invitation-modal.service';
 
 @NgModule({
   declarations: [
@@ -46,6 +48,8 @@ import { TutorialComponent } from './components/tutorial/tutorial.component';
     ChatService,
     AuthGuard,
     LoadingStateService,
+    TutorialService,
+    InvitationModalService,
   ],
   exports: [
     HomeComponent,

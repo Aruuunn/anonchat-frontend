@@ -1,10 +1,10 @@
 <div class="bg-black-1 fixed bottom-0 left-0 md:static flex items-center side-bar-container">
   <div class="item">
     <button #r1
-      (click)="currentChatId.next(currentChatType.getValue() === 'KNOWN'? currentChatId.getValue() :null); currentChatType.next('KNOWN')"
-      style="border-radius: 50%;height: 50px;width: 50px"
-      [ngClass]="{ 'text-white bg-green': currentChatType.getValue() === 'KNOWN', ' text-green':  currentChatType.getValue() !== 'KNOWN' }"
-      class="flex relative justify-center items-center  focus:outline-none focus:ring-2 ring-green-300">
+            (click)="currentChatId.next(currentChatType.getValue() === 'KNOWN'? currentChatId.getValue() :null); currentChatType.next('KNOWN')"
+            style="border-radius: 50%;height: 50px;width: 50px"
+            [ngClass]="{ 'text-white bg-green': currentChatType.getValue() === 'KNOWN', ' text-green':  currentChatType.getValue() !== 'KNOWN' }"
+            class="flex relative justify-center items-center  focus:outline-none focus:ring-2 ring-green-300">
       <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
            fill="currentColor"
            style="height: 30px;width: auto"
@@ -16,11 +16,15 @@
       <span *ngIf="chatService.hasUnreadMessage('KNOWN')"
             class="bg-red-500 w-3 h-3 absolute top-0 -right-0 text-white rounded-full"></span>
     </button>
-    <app-tutorial [description]="'Desc'" title="Known" [elRef]="r1"></app-tutorial>
+    <div *ngIf="this.tutorialService.currentSlide.getValue() === 1 && !this.tutorialService.tutorialCompleted">
+      <app-tutorial [description]="'You dont know the person you chat with, but the other person does!'" title="Chats"
+                    [elRef]="r1"></app-tutorial>
+    </div>
 
   </div>
   <div class="item">
-    <button (click)="currentChatId.next(currentChatType.getValue() === 'ANONYMOUS'? currentChatId.getValue() :null); currentChatType.next('ANONYMOUS')"
+    <button #r2
+            (click)="currentChatId.next(currentChatType.getValue() === 'ANONYMOUS'? currentChatId.getValue() :null); currentChatType.next('ANONYMOUS')"
             style="border-radius: 50%;height: 50px;width: 50px"
             [ngClass]="{ 'text-white bg-green': currentChatType.getValue() === 'ANONYMOUS', 'text-green':  currentChatType.getValue() !== 'ANONYMOUS'  }"
             class="relative flex justify-center items-center  focus:outline-none focus:ring-2 ring-green-300">
@@ -50,13 +54,21 @@
       <span *ngIf="chatService.hasUnreadMessage('ANONYMOUS')"
             class="bg-red-500 w-3 h-3 absolute top-0 -right-0 text-white rounded-full"></span>
     </button>
+    <div *ngIf="this.tutorialService.currentSlide.getValue() === 2 && !this.tutorialService.tutorialCompleted">
+      <app-tutorial [description]="'You know the person you chat with, but the other person does not!'"
+                    title="Anonymous Chats" [elRef]="r2"></app-tutorial>
+    </div>
   </div>
   <div class="item">
-    <button (click)="isInvitationShareModalOpen.next(true)"
+    <button #r3 (click)="invitationModalService.openInvitationShareModal()"
             style="border-radius: 50%;height: 50px;width: 50px"
             class="text-green flex justify-center items-center  focus:outline-none focus:ring-2 ring-green-300">
       <img src="assets/share-icon.svg" style="height: 30px;width: 30px;" alt="search chats">
     </button>
+    <div *ngIf="this.tutorialService.currentSlide.getValue() === 3 && !this.tutorialService.tutorialCompleted">
+      <app-tutorial [description]="'Share your invitation, so that people can chat with you anonymously!'"
+                    title="Share Invitation" [elRef]="r3"></app-tutorial>
+    </div>
   </div>
   <div class="item hidden md:block">
     <button

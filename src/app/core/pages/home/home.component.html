@@ -1,7 +1,7 @@
-<app-share-invitation *ngIf="isInvitationShareModalOpen.getValue()"
-                      [isInvitationShareModalOpen]="isInvitationShareModalOpen"></app-share-invitation>
+<app-share-invitation *ngIf="invitationModalService.isInvitationShareModalOpen.getValue()"
+></app-share-invitation>
 <div class="w-screen flex flex-col-reverse md:flex-row">
-  <app-side-bar [onLogout]="onLogout" [isInvitationShareModalOpen]="isInvitationShareModalOpen"
+  <app-side-bar [onLogout]="onLogout"
                 [currentChatId]="currentChatId" [currentChatType]="currentChatType"></app-side-bar>
   <div class="w-full h-full flex">
     <div [ngClass]="{ 'hidden md:block':currentChatId.getValue()!==null }" class="w-full md:w-auto">

@@ -2,6 +2,8 @@ import { Component, Input } from '@angular/core';
 import { ChatService } from '../../../../services/chat/chat.service';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+import { TutorialService } from '../../../../services/tutorial/tutorial.service';
+import { InvitationModalService } from '../../../../services/invitation-modal/invitation-modal.service';
 
 @Component({
   templateUrl: './side-bar.component.html',
@@ -12,9 +14,13 @@ import { BehaviorSubject } from 'rxjs';
   ],
 })
 export class SideBarComponent {
-  constructor(public chatService: ChatService, private router: Router) {}
+  constructor(
+    public chatService: ChatService,
+    private router: Router,
+    public tutorialService: TutorialService,
+    public invitationModalService: InvitationModalService
+  ) {}
 
-  @Input() isInvitationShareModalOpen!: BehaviorSubject<boolean>;
   @Input() onLogout!: () => void;
   @Input() currentChatId!: BehaviorSubject<null | string>;
   @Input() currentChatType!: BehaviorSubject<string>;

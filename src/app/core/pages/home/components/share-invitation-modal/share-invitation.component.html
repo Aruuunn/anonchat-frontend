@@ -5,7 +5,7 @@
     <div class="bg-black-4 text-white  p-10 md:p-7 rounded-lg m-4  h-screen md:h-auto">
       <div class="flex mb-3 justify-between items-center">
         <h2 class="text-lg p-2  mr-6">Share Invitation</h2>
-        <button style="padding: 12px;" (click)="isInvitationShareModalOpen?.next(false)">
+        <button style="padding: 12px;" (click)="invitationModalService.closeInvitationShareModal()">
           <svg style="height: 24px;width: auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -14,7 +14,7 @@
       </div>
       <p #infoText class="text-gray mb-5 p-2"></p>
       <p class="w-full p-2 rounded overflow-x-auto box-border m-2 bg-black-3 text-white"
-         style="max-width: 100vw">{{invitationLink}}</p>
+         style="max-width: 100vw">{{invitationModalService.invitationLink}}</p>
       <div class="flex p-2  mt-3 text-green">
         <div>
           <button (click)="copyLink();">

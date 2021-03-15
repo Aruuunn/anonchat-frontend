@@ -1,16 +1,25 @@
 <div class="fixed w-screen h-screen bg-black opacity-50 top-0 z-10 left-0">
 </div>
 
-<div class="container mx-auto flex flex-col justify-between items-center z-20 rounded" [ngStyle]="{ 'top': isLargeScreen() ? getTopValue() + 'px' : ''}">
-  <img src="assets/green-left-triangle.svg" alt="" [ngStyle]="{ 'top': isLargeScreen() ? this.elRef.offsetTop + 10 + 'px' :getTopValue() + 125 + 'px' , transform : isLargeScreen() ? '' : 'rotate(-90deg)', left: isLargeScreen() ? '' : this.elRef.offsetLeft + 10 + 'px' }" class="arrow"/>
+<div id="tuts-ctn" class="container mx-auto flex flex-col justify-between items-center z-20 rounded"
+     [ngStyle]="{ 'top': isLargeScreen() ? getTopValue() + 'px' : ''}">
+  <img src="assets/green-left-triangle.svg" alt=""
+       [ngStyle]="{ 'top': getArrowTopValue() + 'px' , transform : isLargeScreen() ? '' : 'rotate(-90deg)', left: isLargeScreen() ? '' : getArrowLeftSm() + 'px' }"
+       class="arrow"/>
   <div class="p-4 w-full">
     <div class="font-bold">{{title}}</div>
-    <p>
+    <p class="mt-4 p-2">
       {{description}}
     </p>
   </div>
 
   <div class="flex w-full justify-end items-center p-2">
-    <button class="uppercase font-bold outline-none border-none focus:ring ring-1 ring-green-400">Next</button>
+    <div>
+      <button class="uppercase  outline-none border-none focus:ring ring-1 ring-green-400 mr-6"
+              (click)="tutorialService.prevSlide()">Prev
+      </button>
+      <button id="next-btn" autofocus class="next-btn uppercase font-bold outline-none border-none focus:ring ring-1 ring-green-400"
+              (click)="tutorialService.isLastSlide() ?tutorialService.onTutorialCompleted() :tutorialService.nextSlide()">{{tutorialService.isLastSlide() ? 'Finish' : 'Next'}}</button>
+    </div>
   </div>
 </div>
