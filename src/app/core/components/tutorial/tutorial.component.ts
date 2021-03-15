@@ -36,15 +36,6 @@ export class TutorialComponent implements OnInit, OnDestroy, AfterContentInit {
   }
 
   ngAfterContentInit(): void {
-    if (!this.isLargeScreen()) {
-      document.body
-        .requestFullscreen()
-        .then(() => {
-          console.log('fullscreen mode on!');
-        })
-        .catch(console.log);
-    }
-
     this.nextButtonEl?.focus();
   }
 

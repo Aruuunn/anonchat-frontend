@@ -18,7 +18,8 @@
       <button class="uppercase  outline-none border-none focus:ring ring-1 ring-green-400 mr-6"
               (click)="tutorialService.prevSlide()">Prev
       </button>
-      <button id="next-btn" autofocus class="next-btn uppercase font-bold outline-none border-none focus:ring ring-1 ring-green-400"
+      <button id="next-btn" autofocus
+              class="next-btn uppercase font-bold outline-none border-none focus:ring ring-1 ring-green-400"
               (click)="tutorialService.isLastSlide() ?tutorialService.onTutorialCompleted() :tutorialService.nextSlide()">{{tutorialService.isLastSlide() ? 'Finish' : 'Next'}}</button>
     </div>
   </div>
