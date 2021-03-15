@@ -17,7 +17,7 @@
             class="bg-red-500 w-3 h-3 absolute top-0 -right-0 text-white rounded-full"></span>
     </button>
     <div *ngIf="this.tutorialService.currentSlide.getValue() === 1 && !this.tutorialService.tutorialCompleted">
-      <app-tutorial [description]="'You dont know the person you chat with, but the other person does!'" title="Chats"
+      <app-tutorial [description]="'You dont know the person you chat with, but the other person does!'" title="Known Chats"
                     [elRef]="r1"></app-tutorial>
     </div>
 
