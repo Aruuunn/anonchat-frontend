@@ -22,8 +22,8 @@ export class InvitationModalService {
     if ('share' in navigator) {
       navigator
         .share({
-          title: 'AnonChat - Invitation Link',
-          text: 'Share this invitation link 🔗',
+          title:
+            'AnonChat - Invitation Link of ' + this.userService.user?.fullName,
           url: this.invitationLink,
         })
         .then(() => {
