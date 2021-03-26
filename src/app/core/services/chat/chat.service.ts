@@ -14,7 +14,7 @@ import { WebsocketsService } from '../websockets/websockets.service';
 import { Events } from '../websockets/events.enum';
 import { convertAllBufferStringToArrayBuffer } from '../../../../../projects/signal/src/lib/utils/array-buffer.utils';
 import { ChatType } from './chat-type.enum';
-import { colors, uniqueNamesGenerator, animals } from 'unique-names-generator';
+import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 
 // @TODO provide storage backend through DI
 // @TODO refactor this ugly code
@@ -49,7 +49,7 @@ export class ChatService {
       const chatClone = Object.assign({}, chat);
       const messages = [...chatClone.messages];
       for (let i = 0; i < messages.length; i++) {
-        if (!messages[i].sent) {
+        if (!messages[i].sent && messages[i].type !== MessageTypeEnum.RECEIVED) {
           messages.splice(i, 1);
           i--;
         }
@@ -57,6 +57,8 @@ export class ChatService {
       chatClone.messages = messages;
       chatsClone.push(chatClone);
     }
+    console.log({ chats: this.chats });
+    console.log({ chatsClone });
     localStorage.setItem('chats', JSON.stringify(chatsClone));
   }
 
@@ -266,6 +268,8 @@ export class ChatService {
       chatId,
       plaintext,
     });
+
+    console.log('message sent ' + JSON.stringify(message));
     return new Promise<string>((res, _) => {
       this.websocketService.emit(
         Events.SEND_MESSAGE,
