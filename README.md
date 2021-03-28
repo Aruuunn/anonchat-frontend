@@ -9,5 +9,7 @@ project link 👉 [anon-chat-web.herokuapp.com/](https://anon-chat-web.herokuapp
 AnonChat is made using **Angular**, **Typescript** **sass**, **tailwindcss**, **Nestjs**, **Nodejs** and **Mongodb**.
 end-to-end encryption *(E2EE)* is acheived using Signal Protocol.
 
-This repository contains the frontend project;
+This repository contains the *frontend* project;
+
+You can find the backend project at [https://github.com/ArunMurugan78/anonchat-server](https://github.com/ArunMurugan78/anonchat-server)
 
