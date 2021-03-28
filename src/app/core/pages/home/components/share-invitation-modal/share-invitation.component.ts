@@ -10,7 +10,6 @@ import { InvitationModalService } from '../../../../services/invitation-modal/in
 })
 export class ShareInvitationComponent {
   constructor(
-    private userService: UserService,
     public invitationModalService: InvitationModalService
   ) {}
 

@@ -91,20 +91,25 @@ export class SignalService {
   async establishSession(
     bundle: DeviceType,
     recipientId: string,
-    deviceId: number
+    deviceId: number = 1
   ): Promise<SessionCipher | null> {
     try {
-      const recipientAddress = new SignalProtocolAddress(recipientId, deviceId);
+      const recipientAddress: SignalProtocolAddress = new SignalProtocolAddress(
+        recipientId,
+        deviceId
+      );
+
       const sessionBuilder = new SessionBuilder(this.store, recipientAddress);
       await sessionBuilder.processPreKey(bundle);
+
       return new SessionCipher(this.store, recipientAddress);
     } catch (e) {
-      console.error(e);
+      console.error('Error in establishing session ' + e);
     }
     return null;
   }
 
-  getSessionCipher(recipientId: string, deviceId: number): SessionCipher {
+  getSessionCipher(recipientId: string, deviceId: number = 1): SessionCipher {
     const address = new SignalProtocolAddress(recipientId, deviceId);
     return new SessionCipher(this.store, address);
   }
@@ -116,6 +121,7 @@ export class SignalService {
     let plaintext: ArrayBuffer | undefined;
 
     if (ciphertext.type === 3) {
+      console.log('Cipher TEXT Type Three');
       // It is a PreKeyWhisperMessage and will establish a session.
       try {
         plaintext = await sessionCipher.decryptPreKeyWhisperMessage(
@@ -128,6 +134,7 @@ export class SignalService {
         // handle identity key conflict
       }
     } else if (ciphertext.type === 1) {
+      console.log('Cipher TEXT Type ONE');
       // It is a WhisperMessage for an established session.
       plaintext = await sessionCipher.decryptWhisperMessage(
         ciphertext.body as string,
@@ -153,6 +160,7 @@ export class SignalService {
       publicKey: signedPreKey.keyPair.pubKey,
       signature: signedPreKey.signature,
     };
+
     const publicPreKeys: PreKeyType[] = preKeys.map((preKey) => ({
       keyId: preKey.keyId,
       publicKey: preKey.keyPair.pubKey,

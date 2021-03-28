@@ -22,6 +22,7 @@ import { SideBarComponent } from './pages/home/components/side-bar/side-bar.comp
 import { TutorialComponent } from './components/tutorial/tutorial.component';
 import { TutorialService } from './services/tutorial/tutorial.service';
 import { InvitationModalService } from './services/invitation-modal/invitation-modal.service';
+import { WebsocketsService } from './services/websockets/websockets.service';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { InvitationModalService } from './services/invitation-modal/invitation-m
     LoadingStateService,
     TutorialService,
     InvitationModalService,
+    WebsocketsService,
   ],
   exports: [
     HomeComponent,

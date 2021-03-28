@@ -10,6 +10,7 @@ import { convertAllArrayBufferToString } from '../../../../../projects/signal/sr
 import { ChatService } from '../../services/chat/chat.service';
 import { LoadingStateService } from '../../services/loading-state/loading-state.service';
 import { BASE_PATH } from 'src/config/base-path.config';
+import { WebsocketsService } from '../../services/websockets/websockets.service';
 
 @Component({
   selector: 'app-welcome',
@@ -25,7 +26,8 @@ export class WelcomeComponent {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private chatService: ChatService,
-    public loadingStateService: LoadingStateService
+    public loadingStateService: LoadingStateService,
+    private websocketService: WebsocketsService
   ) {}
 
   error: null | string = null;
@@ -63,7 +65,13 @@ export class WelcomeComponent {
               'next'
             );
 
-            this.router.navigateByUrl(nextURL?.replace(BASE_PATH, '') ?? '/');
+            this.websocketService.closeConnection();
+
+            this.router
+              .navigateByUrl(nextURL?.replace(BASE_PATH, '') ?? '/')
+              .then(() => {
+                 window.location.reload();
+              });
           },
           ({ error }) => {
             this.loadingStateService.isLoading = false;

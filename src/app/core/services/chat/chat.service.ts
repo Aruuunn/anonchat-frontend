@@ -49,7 +49,10 @@ export class ChatService {
       const chatClone = Object.assign({}, chat);
       const messages = [...chatClone.messages];
       for (let i = 0; i < messages.length; i++) {
-        if (!messages[i].sent && messages[i].type !== MessageTypeEnum.RECEIVED) {
+        if (
+          !messages[i].sent &&
+          messages[i].type !== MessageTypeEnum.RECEIVED
+        ) {
           messages.splice(i, 1);
           i--;
         }
@@ -57,8 +60,7 @@ export class ChatService {
       chatClone.messages = messages;
       chatsClone.push(chatClone);
     }
-    console.log({ chats: this.chats });
-    console.log({ chatsClone });
+
     localStorage.setItem('chats', JSON.stringify(chatsClone));
   }
 
@@ -218,7 +220,7 @@ export class ChatService {
 
   private async getSessionCipher(chat: ChatInterface): Promise<SessionCipher> {
     // tslint:disable-next-line:no-non-null-assertion
-    if (!chat.sessionEstablished && chat.type === 'ANONYMOUS') {
+    if (!chat.sessionEstablished && chat.type === ChatType.ANONYMOUS) {
       console.log('establishing session');
       await this.signalService.establishSession(
         convertAllBufferStringToArrayBuffer(chat.bundle) as DeviceType,
@@ -244,9 +246,11 @@ export class ChatService {
     const { chatId, plaintext } = payload;
     const chat = await this.getChat(chatId);
     const sessionCipher = await this.getSessionCipher(chat);
-    return await sessionCipher.encrypt(
+    const message = await sessionCipher.encrypt(
       this.textEncoder.encode(plaintext).buffer
     );
+
+    return { ...message, body: btoa(message.body ?? '') };
   }
 
   async decryptMessage(payload: {
@@ -257,7 +261,7 @@ export class ChatService {
     const chat = await this.getChat(chatId);
     const sessionCipher = await this.getSessionCipher(chat);
     const buffer = await this.signalService.decryptMessage(
-      message,
+      { ...message, body: atob(message.body ?? '') },
       sessionCipher
     );
     return this.textDecoder.decode(buffer);

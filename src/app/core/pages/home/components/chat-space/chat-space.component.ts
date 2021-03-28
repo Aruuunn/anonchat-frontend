@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { ChatService } from '../../../../services/chat/chat.service';
 import { BehaviorSubject } from 'rxjs';
 

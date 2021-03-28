@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { TutorialService } from '../../../../services/tutorial/tutorial.service';
 import { InvitationModalService } from '../../../../services/invitation-modal/invitation-modal.service';
+import {WebsocketsService} from "../../../../services/websockets/websockets.service";
 
 @Component({
   templateUrl: './side-bar.component.html',
@@ -17,6 +18,7 @@ export class SideBarComponent {
   constructor(
     public chatService: ChatService,
     private router: Router,
+    private websocketService: WebsocketsService,
     public tutorialService: TutorialService,
     public invitationModalService: InvitationModalService
   ) {}

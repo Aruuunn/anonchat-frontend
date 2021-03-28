@@ -14,7 +14,7 @@ export class WebsocketsService {
 
   public connectToWs(url: string): SocketIOClient.Socket {
     const accessToken = this.authService.accessToken ?? undefined;
-    console.log({ accessToken });
+
     const socket = io.connect(url, {
       query: {
         accessToken,
@@ -69,6 +69,7 @@ export class WebsocketsService {
   public closeConnection(): void {
     if (typeof this.ws !== 'undefined') {
       this.ws.close();
+      this.ws = undefined;
     }
   }
 }

@@ -3,6 +3,7 @@
 .all-chats-container {
   height: calc( 100vh - 70px );
   width: 100%;
+  overflow: auto;
 }
 
 
