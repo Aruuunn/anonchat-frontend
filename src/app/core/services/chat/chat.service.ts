@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import {
   DeviceType,
   MessageType,
@@ -16,16 +16,17 @@ import { convertAllBufferStringToArrayBuffer } from '../../../../../projects/sig
 import { ChatType } from './chat-type.enum';
 import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 
-// @TODO provide storage backend through DI
-// @TODO refactor this ugly code
-// @TODO modify code to make speed optimal
+export const CHAT_STORAGE_INJECTION_TOKEN = 'CHAT_STORAGE_INJECTION_TOKEN';
+
 @Injectable({
   providedIn: 'root',
 })
 export class ChatService {
   constructor(
     private signalService: SignalService,
-    private websocketService: WebsocketsService
+    private websocketService: WebsocketsService,
+    @Inject(CHAT_STORAGE_INJECTION_TOKEN)
+    private storage: Storage
   ) {}
 
   private textEncoder: TextEncoder = new TextEncoder();
@@ -33,13 +34,24 @@ export class ChatService {
 
   private sessionCiphers: Record<string, SessionCipher> = {};
 
-  chats: ChatInterface[] =
-    JSON.parse(localStorage.getItem('chats') as string) ?? [];
+  chats: ChatInterface[] = this.getAllChats();
+
+  private getRandomName(): string {
+    return uniqueNamesGenerator({
+      style: 'capital',
+      separator: ' ',
+      dictionaries: [colors, animals],
+      length: 2,
+    });
+  }
+
+  private getAllChats(): ChatInterface[] {
+    return JSON.parse(this.storage.getItem('chats') as string) ?? [];
+  }
 
   clearChats(): void {
     this.chats = [];
-    localStorage.clear();
-    sessionStorage.clear();
+    this.storage.removeItem('chats');
   }
 
   saveChats(chats: ChatInterface[]): void {
@@ -61,10 +73,9 @@ export class ChatService {
       chatsClone.push(chatClone);
     }
 
-    localStorage.setItem('chats', JSON.stringify(chatsClone));
+    this.storage.setItem('chats', JSON.stringify(chatsClone));
   }
 
-  // @TODO refactor to accept a single object
   newChat(
     chatId: string,
     recipientId: string,
@@ -143,8 +154,7 @@ export class ChatService {
     if (chatId === null) {
       return null;
     }
-    // tslint:disable-next-line:no-shadowed-variable
-    const chat = this.chats.find((chat) => chat.id === chatId);
+    const chat = this.chats.find((ch) => ch.id === chatId);
     if (!chat) {
       return null;
     }
@@ -155,8 +165,7 @@ export class ChatService {
     chatId: string,
     messageText: string
   ): string | null {
-    // tslint:disable-next-line:no-shadowed-variable
-    const chat = this.chats.find((chat) => chat.id === chatId);
+    const chat = this.chats.find((ch) => ch.id === chatId);
     if (chat) {
       const messageId = `${Date.now()}${Math.ceil(Math.random() * 10000)}`; // temporary Id
       const message = {
@@ -173,13 +182,12 @@ export class ChatService {
     return null;
   }
 
-  messageSuccessfullySentByLocalUser(
+  async messageSuccessfullySentByLocalUser(
     chatId: string,
     temporaryMessageId: string,
     messageId: string
-  ): void {
-    // tslint:disable-next-line:no-shadowed-variable
-    const chat = this.chats.find((chat) => chat.id === chatId);
+  ): Promise<void> {
+    const chat = await this.getChat(chatId);
     if (chat) {
       const message = chat.messages.find((m) => m.id === temporaryMessageId);
       if (message) {
@@ -192,8 +200,7 @@ export class ChatService {
   async getChat(chatId: string): Promise<ChatInterface> {
     return (
       this.chats.find((chat) => chat.id === chatId) ??
-      (await new Promise((res, rej) => {
-        // tslint:disable-next-line:no-shadowed-variable
+      (await new Promise((res, _) => {
         this.websocketService.emit(
           Events.FETCH_RECIPIENT_ID,
           { chatId },
@@ -203,12 +210,7 @@ export class ChatService {
               recipientId,
               ChatType.KNOWN,
               undefined,
-              uniqueNamesGenerator({
-                style: 'capital',
-                separator: ' ',
-                dictionaries: [colors, animals],
-                length: 2,
-              }),
+              this.getRandomName(),
               true
             );
             res(chat);
@@ -219,9 +221,8 @@ export class ChatService {
   }
 
   private async getSessionCipher(chat: ChatInterface): Promise<SessionCipher> {
-    // tslint:disable-next-line:no-non-null-assertion
     if (!chat.sessionEstablished && chat.type === ChatType.ANONYMOUS) {
-      console.log('establishing session');
+      console.log('establishing session..');
       await this.signalService.establishSession(
         convertAllBufferStringToArrayBuffer(chat.bundle) as DeviceType,
         chat.recipientId,
