@@ -1,4 +1,4 @@
-# AnnonChat 🕵️
+# AnnonChat 🕶
 
 <img src="./sample/example1.png"/>
 
