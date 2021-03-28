@@ -15,7 +15,7 @@ import {
 import { ShareInvitationComponent } from './pages/home/components/share-invitation-modal/share-invitation.component';
 import { HttpService } from './services/http/http.service';
 import { InvitationDetailsResolver } from './resolvers/invitation-details.resolver';
-import { ChatService } from './services/chat/chat.service';
+import { ChatService, CHAT_STORAGE_INJECTION_TOKEN } from './services/chat/chat.service';
 import { AuthGuard } from './services/auth/auth.guard';
 import { LoadingStateService } from './services/loading-state/loading-state.service';
 import { SideBarComponent } from './pages/home/components/side-bar/side-bar.component';
@@ -42,6 +42,10 @@ import { WebsocketsService } from './services/websockets/websockets.service';
     UserService,
     {
       provide: USER_SERVICE_STORAGE_INJECTION_TOKEN,
+      useValue: localStorage,
+    },
+    {
+      provide: CHAT_STORAGE_INJECTION_TOKEN,
       useValue: localStorage,
     },
     HttpService,

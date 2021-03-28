@@ -6,20 +6,21 @@ interface AuthState {
   isLoggedIn: boolean;
 }
 
+
 const initialAuthState: AuthState = {
   accessToken: sessionStorage.getItem('accessToken'),
   isLoggedIn: localStorage.getItem('isLoggedIn') === 'true',
 };
 
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService implements OnDestroy {
+
   public state: BehaviorSubject<AuthState> = new BehaviorSubject<AuthState>(
     initialAuthState
   );
-
-  constructor() {}
 
   get isLoggedIn(): boolean {
     return this.state.getValue().isLoggedIn;

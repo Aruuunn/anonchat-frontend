@@ -121,7 +121,6 @@ export class SignalService {
     let plaintext: ArrayBuffer | undefined;
 
     if (ciphertext.type === 3) {
-      console.log('Cipher TEXT Type Three');
       // It is a PreKeyWhisperMessage and will establish a session.
       try {
         plaintext = await sessionCipher.decryptPreKeyWhisperMessage(
@@ -130,11 +129,9 @@ export class SignalService {
         );
       } catch (e) {
         console.error('handle identity key conflict ' + e);
-        console.log(JSON.stringify(ciphertext));
         // handle identity key conflict
       }
     } else if (ciphertext.type === 1) {
-      console.log('Cipher TEXT Type ONE');
       // It is a WhisperMessage for an established session.
       plaintext = await sessionCipher.decryptWhisperMessage(
         ciphertext.body as string,

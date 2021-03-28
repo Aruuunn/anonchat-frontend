@@ -14,7 +14,7 @@
     </h2>
   </div>
   <div style="height: 80vh;" class="w-full mt-5 p-3 bg-black-1 rounded-xl">
-    <div aria-label="chat messages" style="height: calc( 100% - 45px ); overflow: auto">
+    <div aria-label="chat messages" class="p-3" #chat_messages style="height: calc( 100% - 45px ); overflow: auto">
       <div
         *ngFor="let message of chatService.getMessages(currentChatId.getValue())">
         <div class="relative mt-2" *ngIf="message.type === 'RECEIVED'">
