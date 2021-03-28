@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { AuthService } from '../../services/auth/auth.service';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { WebsocketsService } from '../../services/websockets/websockets.service';
 import { WEBSOCKET_URI } from '../../../../config/api.config';
 import { Events } from '../../services/websockets/events.enum';
@@ -15,7 +15,7 @@ import { InvitationModalService } from '../../services/invitation-modal/invitati
   templateUrl: './home.component.html',
   styleUrls: ['../../../../styles/palette.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements AfterViewInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -28,12 +28,21 @@ export class HomeComponent implements OnInit {
   currentChatType = new BehaviorSubject<string>(ChatType.ANONYMOUS);
 
   onLogout(): void {
+    this.websocketService.closeConnection();
     localStorage.clear();
     sessionStorage.clear();
     void this.router.navigateByUrl('/welcome');
   }
 
-  ngOnInit(): void {
+  ngOnDestroy(): void {
+    this.websocketService.closeConnection();
+  }
+
+  ngAfterViewInit(): void {
+    this.setUpWs();
+  }
+
+  setUpWs(): void {
     this.websocketService.connectToWs(WEBSOCKET_URI);
     this.websocketService.addEventListener(Events.CONNECT, () => {
       console.log('Connected to Ws Server');
@@ -75,6 +84,7 @@ export class HomeComponent implements OnInit {
                     }) => {
                       const { message, chatId, messageId } = payload;
                       console.log('Received a Message ' + messageId);
+
                       this.chatService
                         .newReceivedMessage({ chatId, message })
                         .then(() => {

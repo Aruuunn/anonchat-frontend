@@ -38,7 +38,7 @@
         </div>
       </div>
     </div>
-    <form class="relative" (submit)="onMessageSend()">
+    <form class="relative" (submit)="onMessageSend()" autocomplete="off">
       <img src="../../../../../../assets/add-icon.svg" alt="new message" class="absolute top-0">
       <label for="message" style="display: none">Message to Send</label>
       <input id="message" [(ngModel)]="messageText"

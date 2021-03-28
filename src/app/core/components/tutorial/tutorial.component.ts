@@ -60,11 +60,9 @@ export class TutorialComponent implements OnInit, OnDestroy, AfterContentInit {
 
   getArrowTopValue(): number {
     if (this.isLargeScreen()) {
-      console.log('large screen', this.elRef.offsetTop + 10);
       return this.elRef.offsetTop + 10;
     }
 
-    console.log('sm screen', window.screen.height - 100);
     return window.screen.height - 100;
   }
 
