@@ -1,5 +1,9 @@
-import {PreKeyPairType, SignedPreKeyPairType, KeyPairType} from '@privacyresearch/libsignal-protocol-typescript';
-import { StoreValue } from './signal-protocol-store.interfaces';
+import {
+  PreKeyPairType,
+  SignedPreKeyPairType,
+  KeyPairType,
+} from '@privacyresearch/libsignal-protocol-typescript';
+import { StoreValue } from './interfaces/signal-protocol-store.interfaces';
 
 export function isKeyPairType(kp: any): kp is KeyPairType {
   return !!(kp?.privKey && kp?.pubKey);

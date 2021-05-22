@@ -26,14 +26,9 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "generated/global.scss"
-            ],
-            "scripts": [],
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["generated/global.scss"],
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -89,13 +84,8 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "generated/global.scss"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["generated/global.scss"],
             "scripts": []
           }
         },
@@ -105,11 +95,9 @@
             "tsConfig": [
               "tsconfig.app.json",
               "tsconfig.spec.json",
-              "e2e/tsconfig.json",
+              "e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {
@@ -130,7 +118,7 @@
         }
       }
     },
-    "signal": {
+    "@anonchat/signal": {
       "projectType": "library",
       "root": "projects/signal",
       "sourceRoot": "projects/signal/src",
@@ -163,9 +151,7 @@
               "projects/signal/tsconfig.lib.json",
               "projects/signal/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }

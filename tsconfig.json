@@ -20,8 +20,12 @@
       "dom"
     ],
     "paths": {
-      "signal": [
-        "dist/signal/signal",
+      "@anonchat/signal/*": [
+        "projects/signal/src/public-api",
+        "projects/signal"
+      ],
+      "@anonchat/signal/": [
+        "dist/signal/*",
         "dist/signal"
       ]
     },

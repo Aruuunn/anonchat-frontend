@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { StorageBackend } from '../storage-backend';
+import { StorageBackendInterface } from '../interfaces/storage-backend.interface';
 
 @Injectable()
-export class InMemoryStorage implements StorageBackend {
+export class InMemoryStorage implements StorageBackendInterface {
   private store: { [key: string]: any };
 
   constructor() {
@@ -16,7 +16,7 @@ export class InMemoryStorage implements StorageBackend {
     delete this.store[key];
   }
 
-  async reset(): Promise<void>{
+  async reset(): Promise<void> {
     this.store = {};
   }
 
@@ -27,7 +27,7 @@ export class InMemoryStorage implements StorageBackend {
   async save(key: string, value: any): Promise<void> {
     this.store[key] = value;
   }
-  async keys(): Promise<string []> {
+  async keys(): Promise<string[]> {
     return Object.keys(this.store);
   }
 }

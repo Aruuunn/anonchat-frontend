@@ -1,6 +1,6 @@
 # AnonChat 🕶
 
-<img src="./sample/example1.png"/>
+<img src="sample-images/example1.png"/>
 
 **AnonChat** is a end-to-end encrypted *(E2EE)* anonymous chatting web application. It is a invite based chat app, anyone can chat anonymously with a person who shared their invitation.
 

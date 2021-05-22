@@ -6,7 +6,10 @@ import {
 } from '@privacyresearch/libsignal-protocol-typescript';
 import { Inject, Injectable } from '@angular/core';
 import { arrayBufferToString } from '@privacyresearch/libsignal-protocol-typescript/lib/helpers';
-import { StoreValue, KeyPairType } from './signal-protocol-store.interfaces';
+import {
+  StoreValue,
+  KeyPairType,
+} from './interfaces/signal-protocol-store.interfaces';
 import { isArrayBuffer, isKeyPairType } from './type-gaurds.util';
 import {
   IDENTITY_KEY,
@@ -16,7 +19,7 @@ import {
   SIGNED_PRE_KEY_PREFIX,
   IDENTITY_PREFIX,
 } from './constants';
-import { StorageBackend } from './storage-backend';
+import { StorageBackendInterface } from './interfaces/storage-backend.interface';
 
 export interface Store extends StorageType {
   storeLocalRegistrationId: (registrationId: number) => Promise<void>;
@@ -31,7 +34,7 @@ export const STORAGE_BACKEND_INJECTION_TOKEN =
 export class SignalProtocolStore implements Store {
   constructor(
     @Inject(STORAGE_BACKEND_INJECTION_TOKEN)
-    private storageBackend: StorageBackend
+    private storageBackend: StorageBackendInterface
   ) {}
 
   async get(key: string, defaultValue: StoreValue): Promise<StoreValue> {

@@ -11,7 +11,6 @@ interface SignedPreKeyType extends PreKeyType {
   signature: ArrayBuffer;
 }
 
-
 export type StoreValue =
   | string
   | number

@@ -4,19 +4,24 @@ import {
   MessageType,
   SessionCipher,
 } from '@privacyresearch/libsignal-protocol-typescript';
-import { ChatInterface } from './chat.interface';
 import {
-  MessageInterface,
-  MessageType as MessageTypeEnum,
-} from './message.interface';
-import { SignalService } from '../../../../../projects/signal/src/lib/signal.service';
-import { WebsocketsService } from '../websockets/websockets.service';
-import { Events } from '../websockets/events.enum';
-import { convertAllBufferStringToArrayBuffer } from '../../../../../projects/signal/src/lib/utils/array-buffer.utils';
-import { ChatType } from './chat-type.enum';
-import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
+  SignalService,
+  convertAllBufferStringToArrayBuffer,
+} from '@anonchat/signal/src/public-api';
 
-export const CHAT_STORAGE_INJECTION_TOKEN = 'CHAT_STORAGE_INJECTION_TOKEN';
+import { ChatType } from './chat-type.enum';
+import { Events } from '../websockets/events.enum';
+import { ChatInterface } from './interfaces/chat.interface';
+import { MessageInterface } from './interfaces/message.interface';
+import { ChatStorageInterface } from './interfaces/chat-storage.interface';
+import { WebsocketsService } from '../websockets/websockets.service';
+import { MESSAGES_STORAGE_INJECTION_TOKEN } from './storages/messages-storage';
+import { MessageType as MessageTypeEnum } from './interfaces/message-type.interface';
+import { MessagesStorageInterface } from './interfaces/messages-storage.interface';
+
+export const CHAT_STORAGE_INJECTION_TOKEN = Symbol(
+  'CHAT_STORAGE_INJECTION_TOKEN'
+);
 
 @Injectable({
   providedIn: 'root',
@@ -26,7 +31,9 @@ export class ChatService {
     private signalService: SignalService,
     private websocketService: WebsocketsService,
     @Inject(CHAT_STORAGE_INJECTION_TOKEN)
-    private storage: Storage
+    private chatStorage: ChatStorageInterface,
+    @Inject(MESSAGES_STORAGE_INJECTION_TOKEN)
+    private messagesStorage: MessagesStorageInterface
   ) {}
 
   private textEncoder: TextEncoder = new TextEncoder();
@@ -34,24 +41,9 @@ export class ChatService {
 
   private sessionCiphers: Record<string, SessionCipher> = {};
 
-  chats: ChatInterface[] = this.getAllChats();
-
-  private getRandomName(): string {
-    return uniqueNamesGenerator({
-      style: 'capital',
-      separator: ' ',
-      dictionaries: [colors, animals],
-      length: 2,
-    });
-  }
-
-  private getAllChats(): ChatInterface[] {
-    return JSON.parse(this.storage.getItem('chats') as string) ?? [];
-  }
-
-  clearChats(): void {
-    this.chats = [];
-    this.storage.removeItem('chats');
+  async clearChats(): Promise<void> {
+    await this.chatStorage.clear();
+    await this.messagesStorage.clear();
   }
 
   saveChats(chats: ChatInterface[]): void {
@@ -323,9 +315,5 @@ export class ChatService {
       }
     }
     return false;
-  }
-
-  isChatsEmpty(): boolean {
-    return this.chats.length === 0;
   }
 }
