@@ -1,15 +1,15 @@
 import {StorageBackend} from '../storage-backend';
 import {Inject, Injectable} from '@angular/core';
 import {convertAllArrayBufferToString, convertAllBufferStringToArrayBuffer} from '../../utils/array-buffer.utils';
-import {AsyncStorage} from '../async-storage.interface';
+import {AsyncKeyValueStorageInterface as AsyncKeyValueStorage} from '../async-key-value-storage.interface';
 
-export const WEB_STORAGE_INJECTION_TOKEN = Symbol('WEB_STORAGE_INJECTION_TOKEN');
+export const ASYNC_KEY_VALUE_STORAGE = Symbol('ASYNC_KEY_VALUE_STORAGE');
 
 @Injectable()
 export class KeyValueStorage implements StorageBackend {
   constructor(
-    @Inject(WEB_STORAGE_INJECTION_TOKEN)
-    private webStorage: AsyncStorage) {
+    @Inject(ASYNC_KEY_VALUE_STORAGE)
+    private webStorage: AsyncKeyValueStorage) {
   }
 
   private serializeData = (data: any): string => {
