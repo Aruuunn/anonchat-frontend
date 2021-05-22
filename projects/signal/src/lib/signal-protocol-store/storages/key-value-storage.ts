@@ -3,12 +3,12 @@ import {Inject, Injectable} from '@angular/core';
 import {convertAllArrayBufferToString, convertAllBufferStringToArrayBuffer} from '../../utils/array-buffer.utils';
 import {AsyncKeyValueStorageInterface as AsyncKeyValueStorage} from '../async-key-value-storage.interface';
 
-export const ASYNC_KEY_VALUE_STORAGE = Symbol('ASYNC_KEY_VALUE_STORAGE');
+export const ASYNC_KEY_VALUE_STORAGE_INJECTION_TOKEN = Symbol('ASYNC_KEY_VALUE_STORAGE');
 
 @Injectable()
 export class KeyValueStorage implements StorageBackend {
   constructor(
-    @Inject(ASYNC_KEY_VALUE_STORAGE)
+    @Inject(ASYNC_KEY_VALUE_STORAGE_INJECTION_TOKEN)
     private webStorage: AsyncKeyValueStorage) {
   }
 
