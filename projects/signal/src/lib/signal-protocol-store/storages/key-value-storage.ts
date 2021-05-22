@@ -1,14 +1,15 @@
 import {StorageBackend} from '../storage-backend';
 import {Inject, Injectable} from '@angular/core';
 import {convertAllArrayBufferToString, convertAllBufferStringToArrayBuffer} from '../../utils/array-buffer.utils';
+import {AsyncStorage} from '../async-storage.interface';
 
-export const WEB_STORAGE_INJECTION_TOKEN = 'WEB_STORAGE_INJECTION_TOKEN';
+export const WEB_STORAGE_INJECTION_TOKEN = Symbol('WEB_STORAGE_INJECTION_TOKEN');
 
 @Injectable()
-export class WebStorageAdapter implements StorageBackend {
+export class KeyValueStorage implements StorageBackend {
   constructor(
     @Inject(WEB_STORAGE_INJECTION_TOKEN)
-    private webStorage: Storage) {
+    private webStorage: AsyncStorage) {
   }
 
   private serializeData = (data: any): string => {
@@ -21,11 +22,11 @@ export class WebStorageAdapter implements StorageBackend {
   };
 
   async save(key: string, data: any): Promise<void> {
-    this.webStorage.setItem(key, this.serializeData(data));
+    await this.webStorage.setItem(key, this.serializeData(data));
   }
 
   async get(key: string): Promise<any> {
-    const storedData = this.webStorage.getItem(key);
+    const storedData = await this.webStorage.getItem(key);
     if (storedData === null) {
       return undefined;
     } else {
@@ -34,20 +35,18 @@ export class WebStorageAdapter implements StorageBackend {
   }
 
   async remove(key: string): Promise<void> {
-    this.webStorage.removeItem(key);
+    await this.webStorage.removeItem(key);
   }
 
   async reset(): Promise<void> {
-    this.webStorage.clear();
+    await this.webStorage.clear();
   }
 
   async contains(key: string): Promise<boolean> {
-    return this.webStorage.getItem(key) !== null;
+    return await this.webStorage.getItem(key) !== null;
   }
 
   async keys(): Promise<string[]> {
-    console.assert(this.webStorage !== null && typeof this.webStorage !== 'undefined', 'WebStorage is undefined');
-    return Object.keys(this.webStorage);
+    return (await this.webStorage.keys() ) ?? [];
   }
-
 }
