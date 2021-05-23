@@ -1,7 +1,8 @@
-import { ChatStorageInterface } from '../interfaces/chat-storage.interface';
 import Dexie from 'dexie';
+import { ChatStorageInterface } from '../interfaces/chat-storage.interface';
 import { ChatInterface } from '../interfaces/chat.interface';
 import { Injectable } from '@angular/core';
+import { MessageInterface } from '../interfaces/message.interface';
 
 export const CHAT_STORAGE_INJECTION_TOKEN = Symbol(
   'CHAT_STORAGE_INJECTION_TOKEN'
@@ -12,14 +13,17 @@ export const CHAT_STORAGE_INJECTION_TOKEN = Symbol(
 })
 export class ChatStorage extends Dexie implements ChatStorageInterface {
   chats: Dexie.Table<ChatInterface, string>;
+  messages: Dexie.Table<MessageInterface, string>;
 
   constructor() {
     super('ChatStorage');
     this.version(1).stores({
-      chats: 'id',
+      chats: 'id, lastUpdatedAt',
+      messages: 'id',
     });
 
     this.chats = this.table('chats');
+    this.messages = this.table('messages');
   }
 
   getTotalChatsCount(): Promise<number> {
@@ -27,7 +31,7 @@ export class ChatStorage extends Dexie implements ChatStorageInterface {
   }
 
   chatAtIndex(index: number): Promise<ChatInterface | undefined> {
-    return this.chats.offset(index).first();
+    return this.chats.orderBy('lastUpdatedAt').offset(index).first();
   }
 
   async createNewChat(chatData: ChatInterface): Promise<void> {
@@ -36,5 +40,41 @@ export class ChatStorage extends Dexie implements ChatStorageInterface {
 
   async clear(): Promise<void> {
     await this.chats.clear();
+    await this.messages.clear();
+  }
+
+  getTotalMessageCount(chatId: string): Promise<number> {
+    return this.messages.where('chatId').equals(chatId).count();
+  }
+
+  messageAtIndex(
+    chatID: string,
+    index: number
+  ): Promise<MessageInterface | undefined> {
+    return this.messages.where('chatId').equals(chatID).offset(index).first();
+  }
+
+  async addNewMessage(message: MessageInterface): Promise<void> {
+    await this.messages.add(message);
+  }
+
+  getLastMessage(chatId: string): Promise<MessageInterface | undefined> {
+    return this.messages.where('chatId').equals(chatId).last();
+  }
+
+  getNumberOfUnreadMessages(chatId: string): Promise<number> {
+    return this.messages
+      .where('chatId')
+      .equals(chatId)
+      .filter((message) => !message.read)
+      .count();
+  }
+
+  async updateChat(chat: ChatInterface): Promise<void> {
+    await this.chats.put(chat);
+  }
+
+  async getChatUsingId(chatId: string): Promise<ChatInterface | undefined> {
+    return this.chats.where('id').equals(chatId).first();
   }
 }

@@ -28,22 +28,10 @@
     </div>
   </div>
 
-  <div class="flex-col items-center p-3">
-    <div tabindex="0" *ngFor="let chat of chatService.fetchAllChats(chatType)"
-         (click)="currentChatId.next(chat.id)"
-         (keypress)="($event.key === 'Enter' || $event.key === ' ') && currentChatId.next(chat.id)"
-         [ngClass]="{ 'bg-green': chat.id === currentChatId.getValue() }"
-         class="w-full mt-2 rounded-lg p-5 bg-black-5 focus:ring outline-none ring-green-400 text-white h-28">
-      <h3 class="font-bold flex items-center">
-        {{chat.name ? chat.name : "Anonymous " }}</h3>
-      <div class="flex justify-between mt-3 items-center">
-        <p style="height: 24px" class="overflow-hidden overflow-ellipsis">
-          {{chat.messages.length !== 0 ? (chat.messages[chat.messages.length - 1]).messageText : ''}}
-        </p>
-        <span
-          *ngIf="chatService.getNumberOfUnreadMessages(chat)!==0 && chat.id !== currentChatId.getValue()"
-          class="bg-green-400 text-sm flex justify-center items-center w-7 h-7 text-white rounded-full p-1">{{chatService.getNumberOfUnreadMessages(chat)}}</span>
-      </div>
+  <cdk-virtual-scroll-viewport [itemSize]="50" class="flex-col items-center h-screen p-3">
+    <div *cdkVirtualFor="let item of items; let index = index;">
+      <app-chat-item [index]="index" [currentChatId]="currentChatId">
+      </app-chat-item>
     </div>
-  </div>
+  </cdk-virtual-scroll-viewport>
 </div>

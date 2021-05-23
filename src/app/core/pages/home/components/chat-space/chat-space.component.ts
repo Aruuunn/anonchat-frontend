@@ -1,12 +1,16 @@
 import {
+  AfterContentInit,
   AfterViewChecked,
   Component,
   ElementRef,
   Input,
+  OnDestroy,
   ViewChild,
 } from '@angular/core';
 import { ChatService } from '../../../../services/chat/chat.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { ChatStorage } from '../../../../services/chat/storages/chat-storage';
+import { generateArrayOfSize } from '../../../../../shared/utils/generate-array-of-size';
 
 @Component({
   selector: 'app-chat-space',
@@ -16,14 +20,33 @@ import { BehaviorSubject } from 'rxjs';
     './chat-space.component.sass',
   ],
 })
-export class ChatSpaceComponent implements AfterViewChecked {
-  constructor(public chatService: ChatService) {}
+export class ChatSpaceComponent
+  implements AfterViewChecked, AfterContentInit, OnDestroy {
+  constructor(
+    public chatService: ChatService,
+    private chatStorage: ChatStorage
+  ) {}
 
   @Input() currentChatId!: BehaviorSubject<null | string>;
   @ViewChild('chat_messages')
   chatMessagesContainerRef!: ElementRef<HTMLDivElement>;
 
+  totalMessages = new BehaviorSubject<number>(0);
+  subscriptions: Subscription[] = [];
+
   messageText = '';
+  genArray = generateArrayOfSize;
+
+  ngAfterContentInit(): void {
+    const sub = this.currentChatId.subscribe((chatId) => {
+      if (chatId) {
+        this.chatStorage.getTotalMessageCount(chatId).then((count) => {
+          this.totalMessages.next(count);
+        });
+      }
+    });
+    this.subscriptions.push(sub);
+  }
 
   ngAfterViewChecked(): void {
     this.scrollToBottom();
@@ -41,7 +64,7 @@ export class ChatSpaceComponent implements AfterViewChecked {
     });
   }
 
-  onMessageSend(): void {
+  async onMessageSend(): Promise<void> {
     const chatId = this.currentChatId.getValue();
     const messageText = this.messageText;
     if (
@@ -51,7 +74,7 @@ export class ChatSpaceComponent implements AfterViewChecked {
     ) {
       return;
     }
-    const temporaryMessageId = this.chatService.newMessageSentByLocalUser(
+    const temporaryMessageId = await this.chatService.newMessageSentByLocalUser(
       chatId,
       messageText
     );
@@ -71,5 +94,11 @@ export class ChatSpaceComponent implements AfterViewChecked {
         }
       })
       .catch((e) => console.log('ERROR ', e));
+  }
+
+  ngOnDestroy(): void {
+    for (const sub of this.subscriptions) {
+      sub.unsubscribe();
+    }
   }
 }
