@@ -19,7 +19,7 @@ export class ChatStorage extends Dexie implements ChatStorageInterface {
     super('ChatStorage');
     this.version(1).stores({
       chats: 'id, lastUpdatedAt',
-      messages: 'id',
+      messages: 'id, timeStamp, chatId',
     });
 
     this.chats = this.table('chats');
@@ -55,6 +55,7 @@ export class ChatStorage extends Dexie implements ChatStorageInterface {
   }
 
   async addNewMessage(message: MessageInterface): Promise<void> {
+    console.log({ message });
     await this.messages.add(message);
   }
 
@@ -76,5 +77,21 @@ export class ChatStorage extends Dexie implements ChatStorageInterface {
 
   async getChatUsingId(chatId: string): Promise<ChatInterface | undefined> {
     return this.chats.where('id').equals(chatId).first();
+  }
+
+  async updateMessage(message: MessageInterface): Promise<void> {
+    await this.messages.put(message);
+  }
+
+  async deleteChat(chatId: string): Promise<void> {
+    await this.chats.where('id').equals(chatId).delete();
+  }
+
+  async deleteMessage(messageId: string): Promise<void> {
+    await this.messages.where('id').equals(messageId).delete();
+  }
+
+  getMessageUsingId(messageId: string): Promise<MessageInterface | undefined> {
+    return this.messages.where('id').equals(messageId).first();
   }
 }

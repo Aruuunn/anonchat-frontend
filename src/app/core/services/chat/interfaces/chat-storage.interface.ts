@@ -17,4 +17,8 @@ export interface ChatStorageInterface {
   getNumberOfUnreadMessages(chatId: string): Promise<number>;
   updateChat(chat: ChatInterface): Promise<void>;
   getChatUsingId(chatId: string): Promise<ChatInterface | undefined>;
+  getMessageUsingId(messageId: string): Promise<MessageInterface | undefined>;
+  updateMessage(message: MessageInterface): Promise<void>;
+  deleteChat(chatId: string): Promise<void>;
+  deleteMessage(messageId: string): Promise<void>;
 }

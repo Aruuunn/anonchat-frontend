@@ -57,15 +57,18 @@ export class AcceptInvitationComponent implements OnInit {
             'Bundle has to be defined'
           );
 
-          this.chatService.newChat(
-            chatId,
-            recipientId,
-            ChatType.ANONYMOUS,
-            bundle,
-            this.fullName
-          );
-          this.loadingStateService.isLoading = false;
-          void this.router.navigateByUrl('/');
+          this.chatService
+            .newChat({
+              id: chatId,
+              recipientId,
+              type: ChatType.ANONYMOUS,
+              bundle,
+              name: this.fullName,
+            })
+            .then(() => {
+              this.loadingStateService.isLoading = false;
+              void this.router.navigateByUrl('/');
+            });
         },
         ({ error }) => {
           console.error(error);

@@ -11,4 +11,5 @@ export interface MessageInterface {
   read: boolean;
   type: MessageType;
   sent?: boolean;
+  timeStamp: Date;
 }

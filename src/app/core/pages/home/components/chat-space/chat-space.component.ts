@@ -35,13 +35,23 @@ export class ChatSpaceComponent
   subscriptions: Subscription[] = [];
 
   messageText = '';
-  genArray = generateArrayOfSize;
+  items = [];
+  chatName = '';
 
   ngAfterContentInit(): void {
+    this.totalMessages.subscribe((count) => {
+      this.items = generateArrayOfSize(count);
+    });
+
     const sub = this.currentChatId.subscribe((chatId) => {
       if (chatId) {
         this.chatStorage.getTotalMessageCount(chatId).then((count) => {
           this.totalMessages.next(count);
+        });
+        this.chatService.getChatName(chatId).then((fetchedChatName) => {
+          if (fetchedChatName) {
+            this.chatName = fetchedChatName;
+          }
         });
       }
     });
@@ -51,9 +61,13 @@ export class ChatSpaceComponent
   ngAfterViewChecked(): void {
     this.scrollToBottom();
 
-    this.currentChatId.subscribe(() => {
+    /* @TODO remove this */
+    (window as any).db = this.chatStorage;
+    const sub = this.currentChatId.subscribe(() => {
       this.scrollToBottom();
     });
+
+    this.subscriptions.push(sub);
   }
 
   private scrollToBottom(): void {
@@ -80,6 +94,7 @@ export class ChatSpaceComponent
     );
     this.messageText = '';
 
+    /* @TODO take this logic to a service */
     this.chatService
       .sendMessage(chatId, messageText)
       .then((messageId) => {

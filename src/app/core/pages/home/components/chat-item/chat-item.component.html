@@ -1,6 +1,6 @@
 <div tabindex="0"
-     (click)="chat?.id && currentChatId.next(chat?.id)"
-     (keypress)="($event.key === 'Enter' || $event.key === ' ') && chat?.id && currentChatId.next(chat?.id)"
+     (click)="chat?.id ? currentChatId.next(chat?.id || ''): null"
+     (keypress)="($event.key === 'Enter' || $event.key === ' ') && chat?.id && currentChatId.next(chat?.id || '')"
      [ngClass]="{ 'bg-green': chat?.id === currentChatId.getValue() }"
      class="w-full mt-2 rounded-lg p-5 bg-black-5 focus:ring outline-none ring-green-400 text-white h-28">
   <h3 class="font-bold flex items-center">

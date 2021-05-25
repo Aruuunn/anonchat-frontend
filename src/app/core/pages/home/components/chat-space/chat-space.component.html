@@ -10,14 +10,14 @@
       </button>
 
       <img src="../../../../../../assets/chat-bubble.svg" class="mr-2 hidden md:block" alt="">
-      {{chatService.getChatName(currentChatId.getValue())}}
+      {{chatName}}
     </h2>
   </div>
   <div style="height: 80vh;" class="w-full mt-5 p-3 bg-black-1 rounded-xl">
     <div aria-label="chat messages" class="p-3" #chat_messages style="height: calc( 100% - 45px ); overflow: auto">
-      <cdk-virtual-scroll-viewport style="{ height: 80vh }" itemSize="30">
-        <div *cdkVirtualFor="let item of genArray(totalMessages.getValue()); let index = index;">
-          <app-message-item [index]="index" [chatId]="currentChatId.getValue()"></app-message-item>
+      <cdk-virtual-scroll-viewport class="messages-container" itemSize="50">
+        <div class="w-full" *cdkVirtualFor="let item of items; let index = index;">
+          <app-message-item [index]="index" [chatId]="currentChatId.getValue() || ''"></app-message-item>
         </div>
       </cdk-virtual-scroll-viewport>
     </div>
@@ -26,7 +26,7 @@
       <label for="message" style="display: none">Message to Send</label>
       <input id="message" [(ngModel)]="messageText"
              [ngModelOptions]="{ standalone: true }"
-             placeholder="Message {{  currentChatId.getValue() !== null && currentChatId.getValue() !== undefined ? chatService.getChatName(currentChatId.getValue()) : '' }}"
+             placeholder="Message {{chatName}}"
              style="height: 45px;padding-left: 60px"
              class="w-full rounded text-field box-border"/>
     </form>

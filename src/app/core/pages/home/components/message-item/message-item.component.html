@@ -1,18 +1,18 @@
-<div class="relative mt-2" *ngIf="message.type === 'RECEIVED'">
+<div class="relative mt-2 w-full" *ngIf="message?.type === 'RECEIVED'">
   <img src="../../../../../../assets/gray-triangle.svg" style="top: 25%;" class="absolute left-0" alt="">
   <div style="min-width: 150px; max-width: 30%"
        class="bg-black-4  text-white rounded-lg inline-block ml-6 pt-2 pb-2 pl-3 pr-3">
     {{ message?.messageText || '' }}
   </div>
 </div>
-<div class="relative mt-2 w-full flex justify-end" *ngIf="message.type === 'SENT'">
+<div class="relative mt-2 w-full flex justify-end w-full" *ngIf="message?.type === 'SENT'">
   <img src="../../../../../../assets/green-triangle.svg" style="top: 25%;" class="absolute right-0" alt="">
   <div style="min-width: 150px; max-width: 30%;"
        class="flex justify-between items-center bg-green-darker inline text-white rounded-lg block mr-6 pt-2 pb-2 pl-3 pr-3">
            <span>
              {{ message?.messageText || '' }}
            </span>
-    <svg *ngIf="message.sent===false" style="height: 16px;width: auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg *ngIf="message?.sent===false" style="height: 16px;width: auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
   </div>

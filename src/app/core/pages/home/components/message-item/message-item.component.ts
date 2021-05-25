@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterContentInit, Component, Input, OnInit } from '@angular/core';
 import { MessageInterface } from '../../../../services/chat/interfaces/message.interface';
 import { ChatStorage } from '../../../../services/chat/storages/chat-storage';
 
@@ -20,6 +20,7 @@ export class MessageItemComponent implements OnInit {
       this.chatStorage
         .messageAtIndex(this.chatId, this.index)
         .then((fetchedMessage) => {
+          console.log({ fetchedMessage, chatId: this.chatId });
           this.message = fetchedMessage;
         });
     }

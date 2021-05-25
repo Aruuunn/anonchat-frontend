@@ -53,7 +53,6 @@ export class ChatService {
   async newChat(newChatData: NewChatData): Promise<ChatInterface> {
     const chat: ChatInterface = {
       ...newChatData,
-      messages: [],
       sessionEstablished: newChatData.sessionEstablished ?? false,
       lastUpdatedAt: new Date(),
     };
@@ -83,6 +82,7 @@ export class ChatService {
       return null;
     }
     const chat = await this.chatStorage.getChatUsingId(chatId);
+    console.log({ chat });
     if (!chat) {
       return null;
     }
@@ -103,6 +103,7 @@ export class ChatService {
         sent: false,
         id: messageId,
         chatId,
+        timeStamp: new Date(),
       };
       await this.chatStorage.addNewMessage(message);
       await this.bringChatToTop(chatId);
@@ -118,10 +119,17 @@ export class ChatService {
   ): Promise<void> {
     const chat = await this.getChat(chatId);
     if (chat) {
-      const message = chat.messages.find((m) => m.id === temporaryMessageId);
+      const message = await this.chatStorage.getMessageUsingId(
+        temporaryMessageId
+      );
       if (message) {
         message.sent = true;
         message.id = messageId;
+
+        await Promise.all([
+          this.chatStorage.deleteMessage(temporaryMessageId),
+          this.chatStorage.addNewMessage(message),
+        ]);
       }
     }
   }
@@ -207,7 +215,8 @@ export class ChatService {
       this.websocketService.emit(
         Events.SEND_MESSAGE,
         { chatId, message },
-        (messageId) => {
+        ({ messageId }) => {
+          /* @TODO add type guard */
           console.log('Message Sent.... ' + messageId);
           res(messageId);
         }
@@ -230,6 +239,7 @@ export class ChatService {
       messageText: plaintext,
       read: false,
       id: messageId,
+      timeStamp: new Date(),
     });
 
     await this.bringChatToTop(chatId);
