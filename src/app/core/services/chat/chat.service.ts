@@ -4,7 +4,7 @@ import {
   MessageType,
   SessionCipher,
 } from '@privacyresearch/libsignal-protocol-typescript';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import {
   convertAllBufferStringToArrayBuffer,
   SignalService,
@@ -41,6 +41,7 @@ export class ChatService {
   }
 
   totalChatsCount = new BehaviorSubject(0);
+  onNewMessage = new BehaviorSubject<MessageInterface | null>(null);
 
   private textEncoder: TextEncoder = new TextEncoder();
   private textDecoder: TextDecoder = new TextDecoder();
@@ -107,6 +108,7 @@ export class ChatService {
       };
       await this.chatStorage.addNewMessage(message);
       await this.bringChatToTop(chatId);
+      this.onNewMessage.next(message);
       return messageId;
     }
     return null;
@@ -130,6 +132,7 @@ export class ChatService {
           this.chatStorage.deleteMessage(temporaryMessageId),
           this.chatStorage.addNewMessage(message),
         ]);
+        this.onNewMessage.next(message);
       }
     }
   }
@@ -149,6 +152,7 @@ export class ChatService {
               name: getRandomName(),
               sessionEstablished: true,
             });
+            this.totalChatsCount.next(this.totalChatsCount.getValue() + 1);
             res(chat);
           }
         );

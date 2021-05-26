@@ -46,7 +46,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     this.websocketService.connectToWs(WEBSOCKET_URI);
     this.websocketService.addEventListener(Events.CONNECT, () => {
       console.log('Connected to Ws Server');
-
       console.log('trying to fetch not delivered messages...');
       this.websocketService.emit(
         Events.FETCH_NOT_DELIVERED_MESSAGES,
@@ -64,8 +63,12 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
               const promisesOfReceivedMessages: Promise<any>[] = [];
               if (data instanceof Array) {
                 for (const message of data) {
+                  /* @TODO implement type guard */
                   promisesOfReceivedMessages.push(
-                    this.chatService.newReceivedMessage(message)
+                    this.chatService.newReceivedMessage({
+                      ...message,
+                      message: { ...message.message, messageId: message._id },
+                    })
                   );
                 }
               }
@@ -86,7 +89,10 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
                       console.log('Received a Message ' + messageId);
 
                       this.chatService
-                        .newReceivedMessage({ chatId, message })
+                        .newReceivedMessage({
+                          chatId,
+                          message: { ...message, messageId },
+                        })
                         .then(() => {
                           this.websocketService.emit(Events.RECEIVED_MESSAGE, {
                             messageId,

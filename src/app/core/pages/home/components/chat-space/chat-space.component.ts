@@ -11,6 +11,7 @@ import { ChatService } from '../../../../services/chat/chat.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { ChatStorage } from '../../../../services/chat/storages/chat-storage';
 import { generateArrayOfSize } from '../../../../../shared/utils/generate-array-of-size';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-chat-space',
@@ -39,11 +40,16 @@ export class ChatSpaceComponent
   chatName = '';
 
   ngAfterContentInit(): void {
-    this.totalMessages.subscribe((count) => {
+    this.chatService.onNewMessage.subscribe((message) => {
+      if (message) {
+        this.totalMessages.next(this.totalMessages.getValue() + 1);
+      }
+    });
+    const subscriptionOne = this.totalMessages.subscribe((count) => {
       this.items = generateArrayOfSize(count);
     });
 
-    const sub = this.currentChatId.subscribe((chatId) => {
+    const subscriptionTwo = this.currentChatId.subscribe((chatId) => {
       if (chatId) {
         this.chatStorage.getTotalMessageCount(chatId).then((count) => {
           this.totalMessages.next(count);
@@ -55,14 +61,11 @@ export class ChatSpaceComponent
         });
       }
     });
-    this.subscriptions.push(sub);
+    this.subscriptions.push(subscriptionOne, subscriptionTwo);
   }
 
   ngAfterViewChecked(): void {
     this.scrollToBottom();
-
-    /* @TODO remove this */
-    (window as any).db = this.chatStorage;
     const sub = this.currentChatId.subscribe(() => {
       this.scrollToBottom();
     });
